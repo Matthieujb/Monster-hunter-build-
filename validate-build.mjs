@@ -41,7 +41,8 @@ export function validateBuild(build, catalog, options={}) {
     if(talisman.verificationStatus!=='verified')issue('warning','UNVERIFIED_TALISMAN','Talisman non certifié');
     if(Object.keys(talisman.skills||{}).length>3)issue('error','INVALID_TALISMAN','Plus de trois talents renseignés');
     for(const [key,level] of Object.entries(talisman.skills||{})){
-      if(!index.skills.has(key)||!Number.isInteger(level)||level<1)issue('error','INVALID_TALISMAN_SKILL',`Talent de talisman invalide : ${key}`);
+      const skill=index.skills.get(key);
+      if(!skill||!Number.isInteger(level)||level<1||level>skill.maxLevel)issue('error','INVALID_TALISMAN_SKILL',`Talent ou niveau de talisman invalide : ${key}`);
       else rawSkills[key]=(rawSkills[key]||0)+level;
     }
   }
