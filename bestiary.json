@@ -1,1 +1,395 @@
-{"version":"0.1.0","verificationStatus":"placeholder","monsters":[],"disclaimer":"Aucun monstre n'est affiché sans source vérifiée ; ajouter des fiches sourcées progressivement."}
+{
+  "version": "0.2.0",
+  "verificationStatus": "community-sourced-partial",
+  "locale": "fr-FR",
+  "lastReviewed": "2026-11-10",
+  "disclaimer": "Sources communautaires : noms français et probabilités à contrôler dans le jeu. Les chances sont par méthode et ne représentent pas une probabilité totale par chasse. Catalogue partiel.",
+  "monsters": [
+    {
+      "id": "chatacabra",
+      "name": "Chatacabra",
+      "verificationStatus": "community-sourced",
+      "source": "https://mhwilds.gamertw.com/fr/monster/chatacabra",
+      "materials": [
+        {
+          "name": "Certificat Chatacabra",
+          "rank": "Novice",
+          "method": "Récompense de cible",
+          "chance": 8
+        },
+        {
+          "name": "Écaille Chatacabra",
+          "rank": "Novice",
+          "method": "Récompense de cible",
+          "chance": 27
+        },
+        {
+          "name": "Peau Chatacabra",
+          "rank": "Novice",
+          "method": "Récompense de cible",
+          "chance": 27
+        },
+        {
+          "name": "Mâchoire Chatacabra",
+          "rank": "Novice",
+          "method": "Récompense de cible",
+          "chance": 23
+        },
+        {
+          "name": "Carapace Chatacabra",
+          "rank": "Novice",
+          "method": "Récompense de cible",
+          "chance": 15
+        },
+        {
+          "name": "Certificat Chatacabra S",
+          "rank": "Expert",
+          "method": "Récompense de cible",
+          "chance": 8
+        },
+        {
+          "name": "Écaille Chatacabra +",
+          "rank": "Expert",
+          "method": "Récompense de cible",
+          "chance": 27
+        },
+        {
+          "name": "Peau Chatacabra +",
+          "rank": "Expert",
+          "method": "Récompense de cible",
+          "chance": 27
+        },
+        {
+          "name": "Mâchoire Chatacabra +",
+          "rank": "Expert",
+          "method": "Récompense de cible",
+          "chance": 23
+        },
+        {
+          "name": "Cuirasse Chatacabra",
+          "rank": "Expert",
+          "method": "Récompense de cible",
+          "chance": 15
+        },
+        {
+          "name": "Écaille Chatacabra",
+          "rank": "Novice",
+          "method": "Dépeçage",
+          "chance": 35
+        },
+        {
+          "name": "Écaille Chatacabra +",
+          "rank": "Expert",
+          "method": "Dépeçage",
+          "chance": 35
+        },
+        {
+          "name": "Cuirasse Chatacabra",
+          "rank": "Expert",
+          "method": "Dépeçage",
+          "chance": 15
+        }
+      ]
+    },
+    {
+      "id": "quematrice",
+      "name": "Quematrice",
+      "verificationStatus": "community-sourced",
+      "source": "https://mhwilds.gamertw.com/fr/monster/quematrice",
+      "materials": [
+        {
+          "name": "Certificat Quematrice",
+          "rank": "Novice",
+          "method": "Récompense de cible",
+          "chance": 8
+        },
+        {
+          "name": "Écaille Quematrice",
+          "rank": "Novice",
+          "method": "Récompense de cible",
+          "chance": 25
+        },
+        {
+          "name": "Peau Quematrice",
+          "rank": "Novice",
+          "method": "Récompense de cible",
+          "chance": 25
+        },
+        {
+          "name": "Briquet Quematrice",
+          "rank": "Novice",
+          "method": "Récompense de cible",
+          "chance": 20
+        },
+        {
+          "name": "Crête Quematrice",
+          "rank": "Novice",
+          "method": "Récompense de cible",
+          "chance": 14
+        },
+        {
+          "name": "Queue Quematrice",
+          "rank": "Novice",
+          "method": "Récompense de cible",
+          "chance": 8
+        },
+        {
+          "name": "Certificat Quematrice S",
+          "rank": "Expert",
+          "method": "Récompense de cible",
+          "chance": 8
+        },
+        {
+          "name": "Écaille Quematrice +",
+          "rank": "Expert",
+          "method": "Récompense de cible",
+          "chance": 25
+        },
+        {
+          "name": "Peau Quematrice +",
+          "rank": "Expert",
+          "method": "Récompense de cible",
+          "chance": 25
+        },
+        {
+          "name": "Briquet Quematrice +",
+          "rank": "Expert",
+          "method": "Récompense de cible",
+          "chance": 20
+        },
+        {
+          "name": "Crête Quematrice +",
+          "rank": "Expert",
+          "method": "Récompense de cible",
+          "chance": 11
+        },
+        {
+          "name": "Queue Quematrice",
+          "rank": "Expert",
+          "method": "Récompense de cible",
+          "chance": 8
+        },
+        {
+          "name": "Gemme de wyverne",
+          "rank": "Expert",
+          "method": "Récompense de cible",
+          "chance": 3
+        }
+      ]
+    },
+    {
+      "id": "doshaguma",
+      "name": "Doshaguma",
+      "verificationStatus": "community-sourced",
+      "source": "https://mhwilds.gamertw.com/fr/monster/doshaguma",
+      "materials": [
+        {
+          "name": "Certificat Doshaguma",
+          "rank": "Novice",
+          "method": "Récompense de cible",
+          "chance": 11
+        },
+        {
+          "name": "Peau Doshaguma",
+          "rank": "Novice",
+          "method": "Récompense de cible",
+          "chance": 27
+        },
+        {
+          "name": "Fourrure Doshaguma",
+          "rank": "Novice",
+          "method": "Récompense de cible",
+          "chance": 27
+        },
+        {
+          "name": "Croc Doshaguma",
+          "rank": "Novice",
+          "method": "Récompense de cible",
+          "chance": 20
+        },
+        {
+          "name": "Griffe Doshaguma",
+          "rank": "Novice",
+          "method": "Récompense de cible",
+          "chance": 15
+        },
+        {
+          "name": "Certificat Doshaguma S",
+          "rank": "Expert",
+          "method": "Récompense de cible",
+          "chance": 8
+        },
+        {
+          "name": "Peau Doshaguma +",
+          "rank": "Expert",
+          "method": "Récompense de cible",
+          "chance": 27
+        },
+        {
+          "name": "Pelage Doshaguma +",
+          "rank": "Expert",
+          "method": "Récompense de cible",
+          "chance": 27
+        },
+        {
+          "name": "Croc Doshaguma +",
+          "rank": "Expert",
+          "method": "Récompense de cible",
+          "chance": 20
+        },
+        {
+          "name": "Griffe Doshaguma +",
+          "rank": "Expert",
+          "method": "Récompense de cible",
+          "chance": 15
+        },
+        {
+          "name": "Gemme bestiale",
+          "rank": "Expert",
+          "method": "Récompense de cible",
+          "chance": 3
+        },
+        {
+          "name": "Peau Doshaguma",
+          "rank": "Novice",
+          "method": "Dépeçage",
+          "chance": 35
+        },
+        {
+          "name": "Fourrure Doshaguma",
+          "rank": "Novice",
+          "method": "Dépeçage",
+          "chance": 30
+        },
+        {
+          "name": "Croc Doshaguma",
+          "rank": "Novice",
+          "method": "Dépeçage",
+          "chance": 20
+        },
+        {
+          "name": "Griffe Doshaguma",
+          "rank": "Novice",
+          "method": "Dépeçage",
+          "chance": 15
+        },
+        {
+          "name": "Griffe Doshaguma",
+          "rank": "Novice",
+          "method": "Bris de patte avant",
+          "chance": 100
+        },
+        {
+          "name": "Fourrure Doshaguma",
+          "rank": "Novice",
+          "method": "Bris de touffe caudale",
+          "chance": 100
+        },
+        {
+          "name": "Griffe Doshaguma +",
+          "rank": "Expert",
+          "method": "Bris de patte avant",
+          "chance": 100
+        }
+      ]
+    },
+    {
+      "id": "balahara",
+      "name": "Balahara",
+      "verificationStatus": "community-sourced",
+      "source": "https://wilds.gameconductor.com/en/monster-detail/13",
+      "materials": [
+        {
+          "name": "Certificat Balahara",
+          "rank": "Novice",
+          "method": "Récompense de cible",
+          "chance": 8
+        },
+        {
+          "name": "Écaille Balahara",
+          "rank": "Novice",
+          "method": "Récompense de cible",
+          "chance": 20
+        },
+        {
+          "name": "Carapace Balahara",
+          "rank": "Novice",
+          "method": "Récompense de cible",
+          "chance": 20
+        },
+        {
+          "name": "Crâne Balahara",
+          "rank": "Novice",
+          "method": "Récompense de cible",
+          "chance": 15
+        },
+        {
+          "name": "Queue Balahara",
+          "rank": "Novice",
+          "method": "Récompense de cible",
+          "chance": 11
+        },
+        {
+          "name": "Perle noire Balahara",
+          "rank": "Novice",
+          "method": "Récompense de cible",
+          "chance": 8
+        },
+        {
+          "name": "Poche d'eau",
+          "rank": "Novice",
+          "method": "Récompense de cible",
+          "chance": 18
+        },
+        {
+          "name": "Écaille Balahara",
+          "rank": "Novice",
+          "method": "Dépeçage",
+          "chance": 33
+        },
+        {
+          "name": "Carapace Balahara",
+          "rank": "Novice",
+          "method": "Dépeçage",
+          "chance": 25
+        },
+        {
+          "name": "Crâne Balahara",
+          "rank": "Novice",
+          "method": "Dépeçage",
+          "chance": 18
+        },
+        {
+          "name": "Queue Balahara",
+          "rank": "Novice",
+          "method": "Dépeçage",
+          "chance": 13
+        },
+        {
+          "name": "Perle noire Balahara",
+          "rank": "Novice",
+          "method": "Dépeçage",
+          "chance": 11
+        },
+        {
+          "name": "Queue Balahara",
+          "rank": "Novice",
+          "method": "Dépeçage de queue sectionnée",
+          "chance": 100
+        },
+        {
+          "name": "Crâne Balahara",
+          "rank": "Novice",
+          "method": "Bris de tête",
+          "chance": 80
+        },
+        {
+          "name": "Perle noire Balahara",
+          "rank": "Novice",
+          "method": "Bris de tête",
+          "chance": 20
+        }
+      ]
+    }
+  ]
+}
