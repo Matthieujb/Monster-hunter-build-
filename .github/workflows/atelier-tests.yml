@@ -1,0 +1,22 @@
+name: Tests atelier et chasseur 3D
+on:
+  push:
+    branches: [feat/wilds-builder-advanced-20261110]
+  pull_request:
+    branches: [main]
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Vérifier la syntaxe JavaScript
+        run: |
+          node --check builder-app.mjs
+          node --check hunter-viewer.mjs
+          node --check builder-features.mjs
+          node --check validate-build.mjs
+      - name: Exécuter les tests
+        run: npm test
