@@ -79,7 +79,27 @@ function setupLibraryAndOptimizer(){
  };
 }
 async function loadBestiaryAndCrafting(){
- for(const [file,id,key] of [['bestiary.json','bestiaryList','monsters'],['crafting.json','craftingList','recipes']]){
-  try{const data=await read(file);const target=$(id);target.replaceChildren();if(!data[key]?.length){target.textContent='Catalogue en attente de fiches sourcées et vérifiées.';continue}for(const entry of data[key]){const card=el('div','skillrow',entry.name||entry.id);target.append(card)}}catch(e){$(id).textContent='Données indisponibles : '+e.message}
- }
+ try{
+  const data=await read('bestiary.json'),target=$('bestiaryList');target.replaceChildren();
+  const tools=el('div','filterbar'),search=document.createElement('input'),rank=document.createElement('select');
+  search.type='search';search.placeholder='Monstre ou matériau…';search.setAttribute('aria-label','Rechercher monstre ou matériau');
+  for(const [value,label] of [['all','Tous les rangs'],['Novice','Novice'],['Expert','Expert']]){const opt=document.createElement('option');opt.value=value;opt.textContent=label;rank.append(opt)}
+  tools.append(search,rank);target.append(tools);
+  const results=el('div','bestiary-results');target.append(results);
+  const renderList=()=>{results.replaceChildren();const q=search.value.toLocaleLowerCase('fr').trim();let count=0;
+   for(const monster of data.monsters||[]){
+    const matching=monster.materials.filter(m=>(rank.value==='all'||m.rank===rank.value)&&(!q||monster.name.toLocaleLowerCase('fr').includes(q)||m.name.toLocaleLowerCase('fr').includes(q)));
+    if(!matching.length)continue;count++;
+    const card=document.createElement('details');card.className='bestiary-card';card.open=!!q;
+    const summary=document.createElement('summary');summary.textContent=monster.name+' · '+matching.length+' voies de butin';card.append(summary);
+    const table=document.createElement('table');table.className='loot-table';const thead=document.createElement('thead'),tr=document.createElement('tr');
+    for(const title of ['Matériau','Rang','Obtention','Chance']){const th=document.createElement('th');th.textContent=title;tr.append(th)}thead.append(tr);table.append(thead);
+    const tbody=document.createElement('tbody');for(const m of matching){const row=document.createElement('tr');for(const value of [m.name,m.rank,m.method,m.chance+' %']){const td=document.createElement('td');td.textContent=value;row.append(td)}tbody.append(row)}table.append(tbody);card.append(table);
+    const link=document.createElement('a');link.href=monster.source;link.target='_blank';link.rel='noopener noreferrer';link.textContent='Consulter la source';card.append(link);results.append(card);
+   }if(!count)results.textContent='Aucun matériau trouvé pour cette recherche.';
+  };
+  search.addEventListener('input',renderList);rank.addEventListener('change',renderList);renderList();
+  const disclaimer=el('p','smalltext',data.disclaimer);target.append(disclaimer);
+ }catch(e){$('bestiaryList').textContent='Bestiaire indisponible : '+e.message}
+ try{const data=await read('crafting.json');$('craftingList').textContent=data.recipes?.length?'Recettes disponibles : '+data.recipes.length:'Recettes à vérifier avant publication.'}catch(e){$('craftingList').textContent='Recettes indisponibles : '+e.message}
 }
