@@ -1,4 +1,7 @@
 import {validateBuild} from './validate-build.mjs';
+import {estimatePhysicalDamage} from './damage-engine.mjs';
+import {optimizeEquipment} from './build-optimizer.mjs';
+import {saveBuild,listBuilds,removeBuild} from './build-library.mjs';
 import {optimizeDecorations,compareBuilds,encodeShare,decodeShare,validateCustomTalisman} from './builder-features.mjs';
 let snapshot=null;
 function setupAdvanced(){
@@ -44,12 +47,12 @@ function render(){
  $('skills').replaceChildren();const entries=Object.entries(v.effectiveSkills);if(!entries.length)$('skills').append(el('p','smalltext','Aucun talent renseigné.'));for(const [id,lvl] of entries){const skill=catalog.skills.find(x=>x.id===id);const row=el('div','skillrow');row.append(el('span','',skill?.name||id),el('span','pips',`${lvl}/${skill?.maxLevel||'?'} · ${'◆'.repeat(lvl)}`));$('skills').append(row)}
 }
 function gemCards(){const q=$('searchGem').value.toLocaleLowerCase('fr-FR'),kind=$('gemType').value;const target=$('gemCards');target.replaceChildren();for(const gem of catalog.decorations.filter(g=>(kind==='all'||g.kind===kind)&&g.name.toLocaleLowerCase('fr-FR').includes(q))){const c=el('div','gemcard'),icon=el('div','gem-icon'+(gem.kind==='weapon'?' weapon':''),'◇'),t=el('div');t.append(el('strong','',gem.name),el('small','',`Taille ${gem.size} · ${gem.kind==='weapon'?'Arme':'Armure'}`));c.append(icon,t);target.append(c)} }
-function damage(){const a=Number($('attack').value)||0,m=Number($('motion').value)||0,h=Number($('hitzone').value)||0,s=Number($('sharpness').value)||0;$('damageValue').textContent=Math.max(0,a*m/100*h/100*s).toFixed(1)}
-async function init(){try {const [manifest,equipment,decorations,skills,setBonuses]=await Promise.all(['manifest.json','equipment.json','decorations.json','skills.json','set-bonuses.json'].map(read));catalog={manifest,version:manifest.catalogVersion,equipment,decorations,skills,setBonuses};build=defaultBuild();$('version').textContent=catalog.version;render();gemCards();damage();setupAdvanced();loadHunter3D();}catch(e){$('status').textContent='CHARGEMENT IMPOSSIBLE';$('selectedPiece').textContent=String(e);console.error(e)}}
+function damage(){try{const x=estimatePhysicalDamage({trueRaw:Number($('attack').value),motionValue:Number($('motion').value),hitzone:Number($('hitzone').value),sharpness:Number($('sharpness').value),affinity:Number($('affinity').value),criticalMultiplier:Number($('criticalMultiplier').value),otherMultiplier:Number($('otherMultiplier').value)});$('damageValue').textContent=x.expected.toFixed(1)}catch(e){$('damageValue').textContent='Paramètres invalides'}}
+async function init(){try {const [manifest,equipment,decorations,skills,setBonuses]=await Promise.all(['manifest.json','equipment.json','decorations.json','skills.json','set-bonuses.json'].map(read));catalog={manifest,version:manifest.catalogVersion,equipment,decorations,skills,setBonuses};build=defaultBuild();$('version').textContent=catalog.version;render();gemCards();damage();setupAdvanced();setupLibraryAndOptimizer();loadBestiaryAndCrafting();loadHunter3D();}catch(e){$('status').textContent='CHARGEMENT IMPOSSIBLE';$('selectedPiece').textContent=String(e);console.error(e)}}
 $('menuToggle').addEventListener('click',()=>{const show=$('navigation').classList.toggle('open');$('menuToggle').setAttribute('aria-expanded',String(show))});document.querySelectorAll('nav a').forEach(a=>a.addEventListener('click',()=>{$('navigation').classList.remove('open');document.querySelectorAll('nav a').forEach(x=>x.classList.toggle('active',x===a))}));
 $('saveBtn').addEventListener('click',()=>{if(!build)return;localStorage.setItem(localKey,JSON.stringify(build));alert('Build de démonstration sauvegardé sur ce navigateur.')});
 $('loadBtn').addEventListener('click',()=>{try{const saved=JSON.parse(localStorage.getItem(localKey));if(!saved){alert('Aucune sauvegarde de démo.');return}if(!saved.equipment||!Array.isArray(saved.decorations))throw Error('Format invalide');build=saved;render()}catch(e){alert('Chargement impossible : '+e.message)}});
-$('clearBtn').addEventListener('click',()=>{if(!catalog)return;build=defaultBuild();render()});$('searchGem').addEventListener('input',gemCards);$('gemType').addEventListener('change',gemCards);for(const id of ['attack','motion','hitzone','sharpness'])$(id).addEventListener('input',damage);if($('copyBtn'))$('copyBtn').addEventListener('click',()=>{const blob=new Blob([JSON.stringify(build,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='wilds-build-demo.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)});init();
+$('clearBtn').addEventListener('click',()=>{if(!catalog)return;build=defaultBuild();render()});$('searchGem').addEventListener('input',gemCards);$('gemType').addEventListener('change',gemCards);for(const id of ['attack','motion','hitzone','sharpness','affinity','criticalMultiplier','otherMultiplier'])$(id).addEventListener('input',damage);if($('copyBtn'))$('copyBtn').addEventListener('click',()=>{const blob=new Blob([JSON.stringify(build,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='wilds-build-demo.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)});init();
 
 async function loadHunter3D(){
  const host=$('hunter3d'),status=$('hunter3dStatus'),fallback=$('hunterFallback');
@@ -63,4 +66,20 @@ async function loadHunter3D(){
   $('hunterZoomOut').onclick=()=>hunterViewer.zoomOut();
   $('hunterReset').onclick=()=>hunterViewer.reset();
  }catch(error){console.warn('Visualiseur 3D indisponible',error);host.hidden=true;fallback.hidden=false;status.textContent='Mode 2D : WebGL ou connexion 3D indisponible';}
+}
+
+function setupLibraryAndOptimizer(){
+ const target=$('buildLibrary');
+ const refresh=()=>{target.replaceChildren();for(const record of listBuilds(localStorage)){const row=el('div','editor-row');const load=el('button','secondary',record.name);load.type='button';load.onclick=()=>{if(record.build.catalogVersion!==catalog.version){alert('Catalogue incompatible.');return}build=structuredClone(record.build);render()};const remove=el('button','secondary','Supprimer');remove.type='button';remove.onclick=()=>{removeBuild(localStorage,record.id);refresh()};row.append(load,remove);target.append(row)}if(!target.children.length)target.textContent='Aucun montage enregistré.'};
+ $('librarySave').onclick=()=>{try{saveBuild(localStorage,build,{name:$('buildName').value||'Montage sans nom'});refresh()}catch(e){alert(e.message)}};refresh();
+ $('optimizeEquipmentBtn').onclick=()=>{const goals={};for(const n of $('goalEditor').querySelectorAll('input')){const v=Number(n.value);if(v>0)goals[n.dataset.skill]=Math.min(v,Number(n.max))}if(!Object.keys(goals).length){$('equipmentOptimizeResult').textContent='Sélectionnez un objectif dans OPTIMISEUR DPS / CONFORT.';return}
+ const result=optimizeEquipment(build,catalog,goals,{limit:250,gemLimit:1500});
+ if(result.build){build=result.build;render()}
+ $('equipmentOptimizeResult').textContent=(result.complete?'Objectifs atteints. ':'Objectifs non atteints. ')+result.explored+'/'+result.total+' ensembles explorés.'+(result.truncated?' Recherche partielle.':'')+' Catalogue de démonstration : résultat non certifié.';
+ };
+}
+async function loadBestiaryAndCrafting(){
+ for(const [file,id,key] of [['bestiary.json','bestiaryList','monsters'],['crafting.json','craftingList','recipes']]){
+  try{const data=await read(file);const target=$(id);target.replaceChildren();if(!data[key]?.length){target.textContent='Catalogue en attente de fiches sourcées et vérifiées.';continue}for(const entry of data[key]){const card=el('div','skillrow',entry.name||entry.id);target.append(card)}}catch(e){$(id).textContent='Données indisponibles : '+e.message}
+ }
 }
