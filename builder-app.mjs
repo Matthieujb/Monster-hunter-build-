@@ -18,12 +18,13 @@ function setupAdvanced(){
 const read=async name=>{const r=await fetch('./'+name);if(!r.ok)throw new Error('Chargement de '+name);return r.json()};
 const $=id=>document.getElementById(id);
 const partLabels={weapon:'Arme',head:'Tête',chest:'Torse',arms:'Bras',waist:'Taille',legs:'Jambes'};
-let catalog, build, part='head';
+let catalog, build, part='head',hunterViewer=null;
 const localKey='wilds-kit-demo-build-v1';
 function defaultBuild(){return {catalogVersion:catalog.version,equipment:{weapon:'demo-weapon',head:'demo-helm',chest:'demo-mail',arms:'demo-gloves',waist:'demo-waist',legs:'demo-boots'},decorations:[]};}
 function itemFor(p){return catalog.equipment.find(e=>e.id===build.equipment[p])}
 function el(tag,cls,text){const n=document.createElement(tag);if(cls)n.className=cls;if(text!==undefined)n.textContent=text;return n}
 function render(){
+ if(hunterViewer)hunterViewer.equip(build,catalog);
  const picker=$('equipmentPicker');if(picker){picker.replaceChildren();for(const item of catalog.equipment.filter(x=>x.part===part))picker.append(new Option(item.name,item.id));picker.value=build.equipment[part]||'';picker.onchange=()=>{const previous=itemFor(part);const oldSlots=new Set((previous?.slots||[]).map(s=>s.id));build.equipment[part]=picker.value;build.decorations=build.decorations.filter(d=>!oldSlots.has(d.slotId));render()};}
 
  $('equipmentList').replaceChildren();
@@ -44,8 +45,22 @@ function render(){
 }
 function gemCards(){const q=$('searchGem').value.toLocaleLowerCase('fr-FR'),kind=$('gemType').value;const target=$('gemCards');target.replaceChildren();for(const gem of catalog.decorations.filter(g=>(kind==='all'||g.kind===kind)&&g.name.toLocaleLowerCase('fr-FR').includes(q))){const c=el('div','gemcard'),icon=el('div','gem-icon'+(gem.kind==='weapon'?' weapon':''),'◇'),t=el('div');t.append(el('strong','',gem.name),el('small','',`Taille ${gem.size} · ${gem.kind==='weapon'?'Arme':'Armure'}`));c.append(icon,t);target.append(c)} }
 function damage(){const a=Number($('attack').value)||0,m=Number($('motion').value)||0,h=Number($('hitzone').value)||0,s=Number($('sharpness').value)||0;$('damageValue').textContent=Math.max(0,a*m/100*h/100*s).toFixed(1)}
-async function init(){try {const [manifest,equipment,decorations,skills,setBonuses]=await Promise.all(['manifest.json','equipment.json','decorations.json','skills.json','set-bonuses.json'].map(read));catalog={manifest,version:manifest.catalogVersion,equipment,decorations,skills,setBonuses};build=defaultBuild();$('version').textContent=catalog.version;render();gemCards();damage();setupAdvanced();}catch(e){$('status').textContent='CHARGEMENT IMPOSSIBLE';$('selectedPiece').textContent=String(e);console.error(e)}}
+async function init(){try {const [manifest,equipment,decorations,skills,setBonuses]=await Promise.all(['manifest.json','equipment.json','decorations.json','skills.json','set-bonuses.json'].map(read));catalog={manifest,version:manifest.catalogVersion,equipment,decorations,skills,setBonuses};build=defaultBuild();$('version').textContent=catalog.version;render();gemCards();damage();setupAdvanced();loadHunter3D();}catch(e){$('status').textContent='CHARGEMENT IMPOSSIBLE';$('selectedPiece').textContent=String(e);console.error(e)}}
 $('menuToggle').addEventListener('click',()=>{const show=$('navigation').classList.toggle('open');$('menuToggle').setAttribute('aria-expanded',String(show))});document.querySelectorAll('nav a').forEach(a=>a.addEventListener('click',()=>{$('navigation').classList.remove('open');document.querySelectorAll('nav a').forEach(x=>x.classList.toggle('active',x===a))}));
 $('saveBtn').addEventListener('click',()=>{if(!build)return;localStorage.setItem(localKey,JSON.stringify(build));alert('Build de démonstration sauvegardé sur ce navigateur.')});
 $('loadBtn').addEventListener('click',()=>{try{const saved=JSON.parse(localStorage.getItem(localKey));if(!saved){alert('Aucune sauvegarde de démo.');return}if(!saved.equipment||!Array.isArray(saved.decorations))throw Error('Format invalide');build=saved;render()}catch(e){alert('Chargement impossible : '+e.message)}});
 $('clearBtn').addEventListener('click',()=>{if(!catalog)return;build=defaultBuild();render()});$('searchGem').addEventListener('input',gemCards);$('gemType').addEventListener('change',gemCards);for(const id of ['attack','motion','hitzone','sharpness'])$(id).addEventListener('input',damage);if($('copyBtn'))$('copyBtn').addEventListener('click',()=>{const blob=new Blob([JSON.stringify(build,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='wilds-build-demo.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)});init();
+
+async function loadHunter3D(){
+ const host=$('hunter3d'),status=$('hunter3dStatus'),fallback=$('hunterFallback');
+ if(!host)return;
+ try{
+  const {createHunterViewer}=await import('./hunter-viewer.mjs');
+  hunterViewer=await createHunterViewer(host);
+  hunterViewer.equip(build,catalog);
+  fallback.hidden=true;status.textContent='Glisser pour tourner · Pincer pour zoomer';
+  $('hunterZoomIn').onclick=()=>hunterViewer.zoomIn();
+  $('hunterZoomOut').onclick=()=>hunterViewer.zoomOut();
+  $('hunterReset').onclick=()=>hunterViewer.reset();
+ }catch(error){console.warn('Visualiseur 3D indisponible',error);host.hidden=true;fallback.hidden=false;status.textContent='Mode 2D : WebGL ou connexion 3D indisponible';}
+}
