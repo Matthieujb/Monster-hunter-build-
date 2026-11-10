@@ -1,9 +1,9 @@
 {
-  "version": "0.2.0",
+  "version": "0.3.0",
   "verificationStatus": "community-sourced-partial",
   "locale": "fr-FR",
   "lastReviewed": "2026-11-10",
-  "disclaimer": "Sources communautaires : noms français et probabilités à contrôler dans le jeu. Les chances sont par méthode et ne représentent pas une probabilité totale par chasse. Catalogue partiel.",
+  "disclaimer": "Catalogue communautaire partiel. Les matériaux ajoutés sans taux affichent « À vérifier » : ne pas interpréter comme 0 %. Certains noms et méthodes restent à confirmer dans le jeu.",
   "monsters": [
     {
       "id": "chatacabra",
@@ -388,6 +388,312 @@
           "rank": "Novice",
           "method": "Bris de tête",
           "chance": 20
+        }
+      ]
+    },
+    {
+      "id": "arkveld",
+      "name": "Arkveld",
+      "verificationStatus": "community-sourced-partial",
+      "source": "https://mhwilds.gamertw.com/fr/monster/arkveld",
+      "notes": "Les taux détaillés sont disponibles sur la source. Les méthodes spécifiques seront complétées.",
+      "materials": [
+        {
+          "name": "Certificat Arkveld S",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Écaille Arkveld +",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Armure de plates Arkveld",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Pelage blanc Arkveld",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Corne Arkveld +",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Queue Arkveld",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Gemme Arkveld",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Plaque cuirassée Arkveld",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        }
+      ]
+    },
+    {
+      "id": "rey-dau",
+      "name": "Rey Dau",
+      "verificationStatus": "community-sourced-partial",
+      "source": "https://mhwilds.gamertw.com/fr/monster/rey-dau",
+      "notes": "Version archi-tempérée : matériaux γ distincts à documenter.",
+      "materials": [
+        {
+          "name": "Écaille Rey Dau +",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Cuirasse Rey Dau",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Corne-tonnerre Rey Dau +",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Serre Rey Dau +",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Queue Rey Dau",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Gemme-tonnerre Rey Dau",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        }
+      ]
+    },
+    {
+      "id": "uth-duna",
+      "name": "Uth Duna",
+      "verificationStatus": "community-sourced-partial",
+      "source": "https://mhwilds.gamertw.com/fr/monster/uth-duna",
+      "notes": "Version archi-tempérée : matériaux γ distincts à documenter.",
+      "materials": [
+        {
+          "name": "Écaille Uth Duna +",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Peau Uth Duna +",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Cils Uth Duna +",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Griffe Uth Duna +",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Tentacule Uth Duna +",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Gemme d'eau Uth Duna",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        }
+      ]
+    },
+    {
+      "id": "nu-udra",
+      "name": "Nu Udra",
+      "verificationStatus": "community-sourced-partial",
+      "source": "https://mhwilds.gamertw.com/fr/monster/nu-udra",
+      "notes": "Version archi-tempérée : matériaux γ distincts à documenter.",
+      "materials": [
+        {
+          "name": "Peau Nu Udra +",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Mucus huileux Nu Udra +",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Pointe Nu Udra +",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Corne Nu Udra +",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Tentacule Nu Udra +",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Gemme de feu Nu Udra",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        }
+      ]
+    },
+    {
+      "id": "jin-dahaad",
+      "name": "Jin Dahaad",
+      "verificationStatus": "community-sourced-partial",
+      "source": "https://mhwilds.gamertw.com/fr/monster/jin-dahaad",
+      "notes": "Version archi-tempérée : matériaux γ distincts à documenter.",
+      "materials": [
+        {
+          "name": "Écaille Jin Dahaad +",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Cuirasse Jin Dahaad",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Plaque gelée Jin Dahaad",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Griffe Jin Dahaad +",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Corne Jin Dahaad",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Gemme de glace Jin Dahaad",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Certificat Jin Dahaad S",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        }
+      ]
+    },
+    {
+      "id": "gogmazios",
+      "name": "Gogmazios",
+      "verificationStatus": "community-sourced-partial",
+      "source": "https://mhwilds.gamertw.com/fr/armor/gogmazios-%CE%B1",
+      "notes": "Matériaux confirmés dans les recettes d'armures ; méthode et taux à confirmer.",
+      "materials": [
+        {
+          "name": "Certificat Gogmazios S",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Rempart Gogmazios",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Fortin Gogmazios",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Fléau Gogmazios",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Griffes Gogmazios",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Membrane Gogmazios",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Piqueue Gogmazios",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Gemme-dragon ravagée",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Huile de dragon épaisse",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
         }
       ]
     }
