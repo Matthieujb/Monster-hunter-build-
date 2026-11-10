@@ -12,7 +12,7 @@ export async function createHunterViewer(host){
  const rim=new THREE.DirectionalLight(0x79b4a0,1.2);rim.position.set(-4,3,-3);scene.add(rim);
  const root=new THREE.Group();scene.add(root);
  const materials={metal:new THREE.MeshStandardMaterial({color:0x7c9180,metalness:.55,roughness:.42,flatShading:true}),trim:new THREE.MeshStandardMaterial({color:0xc5a36a,metalness:.65,roughness:.36,flatShading:true}),cloth:new THREE.MeshStandardMaterial({color:0x354c3e,roughness:.9,flatShading:true}),dark:new THREE.MeshStandardMaterial({color:0x24332d,roughness:.85,flatShading:true}),skin:new THREE.MeshStandardMaterial({color:0x8e6953,roughness:.8,flatShading:true})};
- const sections={};const mesh=(parent,geometry,mat,x,y,z,rx=0,ry=0,rz=0)=>{const m=new THREE.Mesh(geometry,mat);m.position.set(x,y,z);m.rotation.set(rx,ry,rz);parent.add(m);return m};
+ const sections={};const mesh=(parent,geometry,mat,x,y,z,rx=0,ry=0,rz=0)=>{const m=new THREE.Mesh(geometry,mat===materials.metal?mat.clone():mat);if(mat===materials.metal)m.userData.armorMetal=true;m.position.set(x,y,z);m.rotation.set(rx,ry,rz);parent.add(m);return m};
  const box=(p,w,h,d,m,x,y,z)=>mesh(p,new THREE.BoxGeometry(w,h,d),m,x,y,z);
  const cone=(p,r1,r2,h,m,x,y,z)=>mesh(p,new THREE.CylinderGeometry(r1,r2,h,6),m,x,y,z);
  const part=(id)=>{const g=new THREE.Group();root.add(g);sections[id]=g;return g};
@@ -43,12 +43,12 @@ export async function createHunterViewer(host){
    const item=catalog.equipment.find(e=>e.id===build.equipment?.[id]);
    const index=item?Math.max(0,catalog.equipment.filter(e=>e.part===id).findIndex(e=>e.id===item.id)):0;
    const color=palette[(index+i)%palette.length];
-   sections[id].traverse(obj=>{if(obj.isMesh&&obj.material===materials.metal){obj.material=obj.material.clone();obj.material.color.setHex(color)}});
+   sections[id].traverse(obj=>{if(obj.isMesh&&obj.userData.armorMetal)obj.material.color.setHex(color)});
    sections[id].visible=!!item;
   }
   schedule();
  }
  const reset=()=>{yaw=.4;pitch=0;zoom=7.7;schedule()};
  draw();
- return {equip,reset,zoomIn(){zoom=Math.max(5,zoom-.5);schedule()},zoomOut(){zoom=Math.min(11,zoom+.5);schedule()},dispose(){disposed=true;observer.disconnect();if(frame)cancelAnimationFrame(frame);host.removeEventListener('pointerdown',onDown);host.removeEventListener('pointermove',onMove);host.removeEventListener('pointerup',onUp);host.removeEventListener('pointercancel',onUp);host.removeEventListener('wheel',onWheel);scene.traverse(o=>{o.geometry?.dispose()});renderer.dispose();renderer.domElement.remove()}};
+ return {equip,reset,zoomIn(){zoom=Math.max(5,zoom-.5);schedule()},zoomOut(){zoom=Math.min(11,zoom+.5);schedule()},dispose(){disposed=true;observer.disconnect();if(frame)cancelAnimationFrame(frame);host.removeEventListener('pointerdown',onDown);host.removeEventListener('pointermove',onMove);host.removeEventListener('pointerup',onUp);host.removeEventListener('pointercancel',onUp);host.removeEventListener('wheel',onWheel);scene.traverse(o=>{o.geometry?.dispose();if(o.userData?.armorMetal)o.material.dispose()});Object.values(materials).forEach(m=>m.dispose());renderer.dispose();renderer.domElement.remove()}};
 }
