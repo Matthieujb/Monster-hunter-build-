@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "catalogVersion": "0.1.0-demo",
+  "game": "Monster Hunter Wilds",
+  "locale": "fr-FR",
+  "gamePatch": null,
+  "verificationStatus": "example-only",
+  "datasets": [
+    "equipment.json",
+    "decorations.json",
+    "skills.json",
+    "set-bonuses.json"
+  ],
+  "disclaimer": "Données démonstratives non vérifiées ; ne pas utiliser pour certifier un vrai build MH Wilds."
+}

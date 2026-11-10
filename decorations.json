@@ -1,0 +1,42 @@
+[
+  {
+    "id": "demo-guard",
+    "name": "Joyau de défense (exemple)",
+    "size": 1,
+    "kind": "armor",
+    "skills": {
+      "demo-defense": 1
+    },
+    "verificationStatus": "example-only"
+  },
+  {
+    "id": "demo-evasion",
+    "name": "Joyau d'esquive (exemple)",
+    "size": 2,
+    "kind": "armor",
+    "skills": {
+      "demo-evasion": 1
+    },
+    "verificationStatus": "example-only"
+  },
+  {
+    "id": "demo-weapon-attack",
+    "name": "Joyau d'arme (exemple)",
+    "size": 3,
+    "kind": "weapon",
+    "skills": {
+      "demo-attack": 1
+    },
+    "verificationStatus": "example-only"
+  },
+  {
+    "id": "demo-hearing",
+    "name": "Joyau de confort (exemple)",
+    "size": 3,
+    "kind": "armor",
+    "skills": {
+      "demo-earplugs": 1
+    },
+    "verificationStatus": "example-only"
+  }
+]

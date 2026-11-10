@@ -1,0 +1,26 @@
+[
+  {
+    "id": "demo-defense",
+    "name": "Défense (exemple)",
+    "maxLevel": 5,
+    "verificationStatus": "example-only"
+  },
+  {
+    "id": "demo-evasion",
+    "name": "Esquive (exemple)",
+    "maxLevel": 5,
+    "verificationStatus": "example-only"
+  },
+  {
+    "id": "demo-attack",
+    "name": "Attaque (exemple)",
+    "maxLevel": 5,
+    "verificationStatus": "example-only"
+  },
+  {
+    "id": "demo-earplugs",
+    "name": "Bouchons d’oreilles (exemple)",
+    "maxLevel": 3,
+    "verificationStatus": "example-only"
+  }
+]

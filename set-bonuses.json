@@ -1,0 +1,12 @@
+[
+  {
+    "id": "demo-bonus",
+    "name": "Bonus de set (exemple)",
+    "setId": "demo-set",
+    "requiredPieces": 2,
+    "skills": {
+      "demo-defense": 1
+    },
+    "verificationStatus": "example-only"
+  }
+]

@@ -1,0 +1,106 @@
+[
+  {
+    "id": "demo-helm",
+    "name": "Casque d'exemple",
+    "kind": "armor",
+    "part": "head",
+    "slots": [
+      {
+        "id": "demo-helm-1",
+        "size": 3,
+        "kind": "armor"
+      },
+      {
+        "id": "demo-helm-2",
+        "size": 1,
+        "kind": "armor"
+      }
+    ],
+    "skills": {
+      "demo-defense": 1
+    },
+    "setId": "demo-set",
+    "verificationStatus": "example-only"
+  },
+  {
+    "id": "demo-mail",
+    "name": "Cuirasse d'exemple",
+    "kind": "armor",
+    "part": "chest",
+    "slots": [
+      {
+        "id": "demo-mail-1",
+        "size": 2,
+        "kind": "armor"
+      }
+    ],
+    "skills": {},
+    "setId": "demo-set",
+    "verificationStatus": "example-only"
+  },
+  {
+    "id": "demo-gloves",
+    "name": "Gants d'exemple",
+    "kind": "armor",
+    "part": "arms",
+    "slots": [
+      {
+        "id": "demo-gloves-1",
+        "size": 1,
+        "kind": "armor"
+      }
+    ],
+    "skills": {},
+    "verificationStatus": "example-only"
+  },
+  {
+    "id": "demo-waist",
+    "name": "Ceinture d'exemple",
+    "kind": "armor",
+    "part": "waist",
+    "slots": [
+      {
+        "id": "demo-waist-1",
+        "size": 3,
+        "kind": "armor"
+      },
+      {
+        "id": "demo-waist-2",
+        "size": 2,
+        "kind": "armor"
+      }
+    ],
+    "skills": {},
+    "verificationStatus": "example-only"
+  },
+  {
+    "id": "demo-boots",
+    "name": "Bottes d'exemple",
+    "kind": "armor",
+    "part": "legs",
+    "slots": [
+      {
+        "id": "demo-boots-1",
+        "size": 2,
+        "kind": "armor"
+      }
+    ],
+    "skills": {},
+    "verificationStatus": "example-only"
+  },
+  {
+    "id": "demo-weapon",
+    "name": "Arme d'exemple",
+    "kind": "weapon",
+    "part": "weapon",
+    "slots": [
+      {
+        "id": "demo-weapon-1",
+        "size": 3,
+        "kind": "weapon"
+      }
+    ],
+    "skills": {},
+    "verificationStatus": "example-only"
+  }
+]
