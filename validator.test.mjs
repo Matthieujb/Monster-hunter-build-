@@ -1,9 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {validateBuild} from '../src/domain/validate-build.mjs';
-import {verifyCatalog} from '../src/domain/catalog.mjs';
-const read = name => JSON.parse(readFileSync(new URL('../src/data/catalog/'+name,import.meta.url)));
+import {validateBuild} from './validate-build.mjs';
+import {verifyCatalog} from './catalog.mjs';
+const read = name => JSON.parse(readFileSync(new URL('./'+name,import.meta.url)));
 const manifest=read('manifest.json');
 const catalog={manifest,version:manifest.catalogVersion,equipment:read('equipment.json'),decorations:read('decorations.json'),skills:read('skills.json'),setBonuses:read('set-bonuses.json')};
 const build=()=>({catalogVersion:catalog.version,equipment:{weapon:'demo-weapon',head:'demo-helm',chest:'demo-mail',arms:'demo-gloves',waist:'demo-waist',legs:'demo-boots'},decorations:[]});
