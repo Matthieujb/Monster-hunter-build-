@@ -11,7 +11,7 @@ try{
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
  let ready=false;for(let i=0;i<30;i++){try{const r=await page.goto('http://127.0.0.1:8765/builder.html',{waitUntil:'domcontentloaded',timeout:2500});if(r?.ok()){ready=true;break}}catch{}await new Promise(r=>setTimeout(r,300))}
  assert.ok(ready,'Serveur local indisponible');
- await page.waitForFunction(()=>document.querySelector('#hunter3dStatus')?.textContent?.includes('Glisser')||document.querySelector('#hunter3dStatus')?.textContent?.includes('Mode 2D'),{timeout:20000});
+ await page.waitForFunction(()=>document.querySelector('#hunter3dStatus')?.textContent?.includes('Glisser')||document.querySelector('#hunter3dStatus')?.textContent?.includes('Mode 2D'),null,{timeout:20000});
  await page.screenshot({path:'artifacts/chasseur-iphone.png',fullPage:true});
  const state=await page.evaluate(()=>({status:document.querySelector('#hunter3dStatus')?.textContent,canvas:!!document.querySelector('#hunter3d canvas'),fallback:!document.querySelector('#hunterFallback')?.hidden}));
  console.log('État 3D :',JSON.stringify(state));
