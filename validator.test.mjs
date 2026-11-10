@@ -20,3 +20,5 @@ test('talisman de plus de 3 compétences invalide',()=>{const b=build();b.talism
 test('version différente signalée',()=>{const b=build();b.catalogVersion='old';assert.ok(validateBuild(b,catalog).warnings.some(x=>x.code==='CATALOG_VERSION_MISMATCH'));});
 test('joyau compatible ajoute son talent',()=>{const b=build();b.decorations=[{slotId:'demo-helm-2',decorationId:'demo-guard'}];assert.equal(validateBuild(b,catalog).effectiveSkills['demo-defense'],3);});
 test('régression : validation ne modifie pas le build original',()=>{const b=build();const before=JSON.stringify(b);validateBuild(b,catalog);assert.equal(JSON.stringify(b),before);});
+
+test('talisman au-delà du niveau maximal interdit',()=>{const b=build();b.talisman={verificationStatus:'verified',skills:{'demo-defense':6}};assert.ok(validateBuild(b,catalog).errors.some(x=>x.code==='INVALID_TALISMAN_SKILL'));});
