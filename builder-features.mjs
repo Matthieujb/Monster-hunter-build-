@@ -39,7 +39,7 @@ export function optimizeDecorations(build,catalog,goals,{limit=30000}={}){
  visit(0,[]);
  return {build:best,evaluation:bestEval,explored,truncated:explored>=limit,complete:!!bestEval?.matched,mode:'joyaux uniquement',catalogCertified:catalog.manifest.verificationStatus==='verified'};
 }
-export function encodeShare(build){return btoa(Array.from(new TextEncoder().encode(JSON.stringify(build)),x=>String.fromCharCode(x)).join('')).replace(/\\+/g,'-').replace(/\\//g,'_').replace(/=+$/,'');}
+export function encodeShare(build){return btoa(Array.from(new TextEncoder().encode(JSON.stringify(build)),x=>String.fromCharCode(x)).join('')).replace(/[+]/g,'-').replace(/[/]/g,'_').replace(/=+$/,'');}
 export function decodeShare(token){
  if(!/^[A-Za-z0-9_-]{1,20000}$/.test(token))throw Error('Lien de partage invalide');
  const raw=atob(token.replace(/-/g,'+').replace(/_/g,'/'));
