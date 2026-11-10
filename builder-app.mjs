@@ -94,7 +94,7 @@ async function loadBestiaryAndCrafting(){
     const summary=document.createElement('summary');summary.textContent=monster.name+' · '+matching.length+' voies de butin';card.append(summary);
     const table=document.createElement('table');table.className='loot-table';const thead=document.createElement('thead'),tr=document.createElement('tr');
     for(const title of ['Matériau','Rang','Obtention','Chance']){const th=document.createElement('th');th.textContent=title;tr.append(th)}thead.append(tr);table.append(thead);
-    const tbody=document.createElement('tbody');for(const m of matching){const row=document.createElement('tr');for(const value of [m.name,m.rank,m.method,m.chance+' %']){const td=document.createElement('td');td.textContent=value;row.append(td)}tbody.append(row)}table.append(tbody);card.append(table);
+    const tbody=document.createElement('tbody');for(const m of matching){const row=document.createElement('tr');for(const value of [m.name,m.rank,m.method,(m.chance==null?'À vérifier':m.chance+' %')]){const td=document.createElement('td');td.textContent=value;row.append(td)}tbody.append(row)}table.append(tbody);card.append(table);
     const link=document.createElement('a');link.href=monster.source;link.target='_blank';link.rel='noopener noreferrer';link.textContent='Consulter la source';card.append(link);results.append(card);
    }if(!count)results.textContent='Aucun matériau trouvé pour cette recherche.';
   };
