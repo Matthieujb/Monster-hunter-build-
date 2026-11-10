@@ -28,12 +28,12 @@ export async function createHunterViewer(host){
  const blade=box(weapon,.32,1.08,.14,materials.metal,1.3,3.2,-.3);blade.rotation.z=-.3;
  const pedestal=mesh(scene,new THREE.CylinderGeometry(1.2,1.35,.16,12),materials.dark,0,.12,0);
  mesh(scene,new THREE.TorusGeometry(1.1,.018,4,36),materials.trim,0,.21,0,Math.PI/2);
- let yaw=.4,pitch=0,zoom=7.7,drag=null,frame=0,disposed=false;
+ let yaw=.4,pitch=0,zoom=7.7,drag=null,frame=0,disposed=false,pinchDistance=null;const pointers=new Map();
  const draw=()=>{if(disposed)return;root.rotation.y=yaw;root.rotation.x=pitch;camera.position.z=zoom;camera.lookAt(0,1.85,0);renderer.render(scene,camera)};
  const schedule=()=>{if(frame)return;frame=requestAnimationFrame(()=>{frame=0;draw()})};
- const onDown=e=>{drag={x:e.clientX,y:e.clientY};host.setPointerCapture(e.pointerId)};
- const onMove=e=>{if(!drag)return;yaw+=(e.clientX-drag.x)*.012;pitch=Math.max(-.35,Math.min(.35,pitch+(e.clientY-drag.y)*.006));drag={x:e.clientX,y:e.clientY};schedule()};
- const onUp=()=>{drag=null};
+ const onDown=e=>{pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});drag={x:e.clientX,y:e.clientY};if(pointers.size===2){const [a,b]=[...pointers.values()];pinchDistance=Math.hypot(a.x-b.x,a.y-b.y)}host.setPointerCapture(e.pointerId)};
+ const onMove=e=>{if(!pointers.has(e.pointerId))return;pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(pointers.size===2){const [a,b]=[...pointers.values()];const d=Math.hypot(a.x-b.x,a.y-b.y);if(pinchDistance!==null)zoom=Math.max(5,Math.min(11,zoom+(pinchDistance-d)*.012));pinchDistance=d;drag=null;schedule();return}if(!drag){drag={x:e.clientX,y:e.clientY};return}yaw+=(e.clientX-drag.x)*.012;pitch=Math.max(-.35,Math.min(.35,pitch+(e.clientY-drag.y)*.006));drag={x:e.clientX,y:e.clientY};schedule()};
+ const onUp=e=>{pointers.delete(e.pointerId);drag=null;pinchDistance=null};
  const onWheel=e=>{e.preventDefault();zoom=Math.max(5,Math.min(11,zoom+Math.sign(e.deltaY)*.5));schedule()};
  host.addEventListener('pointerdown',onDown);host.addEventListener('pointermove',onMove);host.addEventListener('pointerup',onUp);host.addEventListener('pointercancel',onUp);host.addEventListener('wheel',onWheel,{passive:false});
  const observer=new ResizeObserver(()=>{const w=Math.max(1,host.clientWidth),h=Math.max(1,host.clientHeight);renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();schedule()});observer.observe(host);
