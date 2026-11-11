@@ -1,0 +1,27 @@
+name: Test visuel 3D Chromium
+on:
+  push:
+    branches: [feat/wilds-builder-advanced-20261110]
+  workflow_dispatch:
+jobs:
+  browser-3d:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Installer Playwright Chromium
+        run: |
+          npm install --no-save playwright@1.58.2
+          npx playwright install --with-deps chromium
+      - name: Test visuel et capture
+        run: node tests-3d-browser.mjs
+      - name: Conserver la capture même en cas d'échec
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: capture-chasseur-3d
+          path: artifacts/
+          if-no-files-found: ignore

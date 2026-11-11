@@ -1,0 +1,701 @@
+{
+  "version": "0.3.0",
+  "verificationStatus": "community-sourced-partial",
+  "locale": "fr-FR",
+  "lastReviewed": "2026-11-10",
+  "disclaimer": "Catalogue communautaire partiel. Les matériaux ajoutés sans taux affichent « À vérifier » : ne pas interpréter comme 0 %. Certains noms et méthodes restent à confirmer dans le jeu.",
+  "monsters": [
+    {
+      "id": "chatacabra",
+      "name": "Chatacabra",
+      "verificationStatus": "community-sourced",
+      "source": "https://mhwilds.gamertw.com/fr/monster/chatacabra",
+      "materials": [
+        {
+          "name": "Certificat Chatacabra",
+          "rank": "Novice",
+          "method": "Récompense de cible",
+          "chance": 8
+        },
+        {
+          "name": "Écaille Chatacabra",
+          "rank": "Novice",
+          "method": "Récompense de cible",
+          "chance": 27
+        },
+        {
+          "name": "Peau Chatacabra",
+          "rank": "Novice",
+          "method": "Récompense de cible",
+          "chance": 27
+        },
+        {
+          "name": "Mâchoire Chatacabra",
+          "rank": "Novice",
+          "method": "Récompense de cible",
+          "chance": 23
+        },
+        {
+          "name": "Carapace Chatacabra",
+          "rank": "Novice",
+          "method": "Récompense de cible",
+          "chance": 15
+        },
+        {
+          "name": "Certificat Chatacabra S",
+          "rank": "Expert",
+          "method": "Récompense de cible",
+          "chance": 8
+        },
+        {
+          "name": "Écaille Chatacabra +",
+          "rank": "Expert",
+          "method": "Récompense de cible",
+          "chance": 27
+        },
+        {
+          "name": "Peau Chatacabra +",
+          "rank": "Expert",
+          "method": "Récompense de cible",
+          "chance": 27
+        },
+        {
+          "name": "Mâchoire Chatacabra +",
+          "rank": "Expert",
+          "method": "Récompense de cible",
+          "chance": 23
+        },
+        {
+          "name": "Cuirasse Chatacabra",
+          "rank": "Expert",
+          "method": "Récompense de cible",
+          "chance": 15
+        },
+        {
+          "name": "Écaille Chatacabra",
+          "rank": "Novice",
+          "method": "Dépeçage",
+          "chance": 35
+        },
+        {
+          "name": "Écaille Chatacabra +",
+          "rank": "Expert",
+          "method": "Dépeçage",
+          "chance": 35
+        },
+        {
+          "name": "Cuirasse Chatacabra",
+          "rank": "Expert",
+          "method": "Dépeçage",
+          "chance": 15
+        }
+      ]
+    },
+    {
+      "id": "quematrice",
+      "name": "Quematrice",
+      "verificationStatus": "community-sourced",
+      "source": "https://mhwilds.gamertw.com/fr/monster/quematrice",
+      "materials": [
+        {
+          "name": "Certificat Quematrice",
+          "rank": "Novice",
+          "method": "Récompense de cible",
+          "chance": 8
+        },
+        {
+          "name": "Écaille Quematrice",
+          "rank": "Novice",
+          "method": "Récompense de cible",
+          "chance": 25
+        },
+        {
+          "name": "Peau Quematrice",
+          "rank": "Novice",
+          "method": "Récompense de cible",
+          "chance": 25
+        },
+        {
+          "name": "Briquet Quematrice",
+          "rank": "Novice",
+          "method": "Récompense de cible",
+          "chance": 20
+        },
+        {
+          "name": "Crête Quematrice",
+          "rank": "Novice",
+          "method": "Récompense de cible",
+          "chance": 14
+        },
+        {
+          "name": "Queue Quematrice",
+          "rank": "Novice",
+          "method": "Récompense de cible",
+          "chance": 8
+        },
+        {
+          "name": "Certificat Quematrice S",
+          "rank": "Expert",
+          "method": "Récompense de cible",
+          "chance": 8
+        },
+        {
+          "name": "Écaille Quematrice +",
+          "rank": "Expert",
+          "method": "Récompense de cible",
+          "chance": 25
+        },
+        {
+          "name": "Peau Quematrice +",
+          "rank": "Expert",
+          "method": "Récompense de cible",
+          "chance": 25
+        },
+        {
+          "name": "Briquet Quematrice +",
+          "rank": "Expert",
+          "method": "Récompense de cible",
+          "chance": 20
+        },
+        {
+          "name": "Crête Quematrice +",
+          "rank": "Expert",
+          "method": "Récompense de cible",
+          "chance": 11
+        },
+        {
+          "name": "Queue Quematrice",
+          "rank": "Expert",
+          "method": "Récompense de cible",
+          "chance": 8
+        },
+        {
+          "name": "Gemme de wyverne",
+          "rank": "Expert",
+          "method": "Récompense de cible",
+          "chance": 3
+        }
+      ]
+    },
+    {
+      "id": "doshaguma",
+      "name": "Doshaguma",
+      "verificationStatus": "community-sourced",
+      "source": "https://mhwilds.gamertw.com/fr/monster/doshaguma",
+      "materials": [
+        {
+          "name": "Certificat Doshaguma",
+          "rank": "Novice",
+          "method": "Récompense de cible",
+          "chance": 11
+        },
+        {
+          "name": "Peau Doshaguma",
+          "rank": "Novice",
+          "method": "Récompense de cible",
+          "chance": 27
+        },
+        {
+          "name": "Fourrure Doshaguma",
+          "rank": "Novice",
+          "method": "Récompense de cible",
+          "chance": 27
+        },
+        {
+          "name": "Croc Doshaguma",
+          "rank": "Novice",
+          "method": "Récompense de cible",
+          "chance": 20
+        },
+        {
+          "name": "Griffe Doshaguma",
+          "rank": "Novice",
+          "method": "Récompense de cible",
+          "chance": 15
+        },
+        {
+          "name": "Certificat Doshaguma S",
+          "rank": "Expert",
+          "method": "Récompense de cible",
+          "chance": 8
+        },
+        {
+          "name": "Peau Doshaguma +",
+          "rank": "Expert",
+          "method": "Récompense de cible",
+          "chance": 27
+        },
+        {
+          "name": "Pelage Doshaguma +",
+          "rank": "Expert",
+          "method": "Récompense de cible",
+          "chance": 27
+        },
+        {
+          "name": "Croc Doshaguma +",
+          "rank": "Expert",
+          "method": "Récompense de cible",
+          "chance": 20
+        },
+        {
+          "name": "Griffe Doshaguma +",
+          "rank": "Expert",
+          "method": "Récompense de cible",
+          "chance": 15
+        },
+        {
+          "name": "Gemme bestiale",
+          "rank": "Expert",
+          "method": "Récompense de cible",
+          "chance": 3
+        },
+        {
+          "name": "Peau Doshaguma",
+          "rank": "Novice",
+          "method": "Dépeçage",
+          "chance": 35
+        },
+        {
+          "name": "Fourrure Doshaguma",
+          "rank": "Novice",
+          "method": "Dépeçage",
+          "chance": 30
+        },
+        {
+          "name": "Croc Doshaguma",
+          "rank": "Novice",
+          "method": "Dépeçage",
+          "chance": 20
+        },
+        {
+          "name": "Griffe Doshaguma",
+          "rank": "Novice",
+          "method": "Dépeçage",
+          "chance": 15
+        },
+        {
+          "name": "Griffe Doshaguma",
+          "rank": "Novice",
+          "method": "Bris de patte avant",
+          "chance": 100
+        },
+        {
+          "name": "Fourrure Doshaguma",
+          "rank": "Novice",
+          "method": "Bris de touffe caudale",
+          "chance": 100
+        },
+        {
+          "name": "Griffe Doshaguma +",
+          "rank": "Expert",
+          "method": "Bris de patte avant",
+          "chance": 100
+        }
+      ]
+    },
+    {
+      "id": "balahara",
+      "name": "Balahara",
+      "verificationStatus": "community-sourced",
+      "source": "https://wilds.gameconductor.com/en/monster-detail/13",
+      "materials": [
+        {
+          "name": "Certificat Balahara",
+          "rank": "Novice",
+          "method": "Récompense de cible",
+          "chance": 8
+        },
+        {
+          "name": "Écaille Balahara",
+          "rank": "Novice",
+          "method": "Récompense de cible",
+          "chance": 20
+        },
+        {
+          "name": "Carapace Balahara",
+          "rank": "Novice",
+          "method": "Récompense de cible",
+          "chance": 20
+        },
+        {
+          "name": "Crâne Balahara",
+          "rank": "Novice",
+          "method": "Récompense de cible",
+          "chance": 15
+        },
+        {
+          "name": "Queue Balahara",
+          "rank": "Novice",
+          "method": "Récompense de cible",
+          "chance": 11
+        },
+        {
+          "name": "Perle noire Balahara",
+          "rank": "Novice",
+          "method": "Récompense de cible",
+          "chance": 8
+        },
+        {
+          "name": "Poche d'eau",
+          "rank": "Novice",
+          "method": "Récompense de cible",
+          "chance": 18
+        },
+        {
+          "name": "Écaille Balahara",
+          "rank": "Novice",
+          "method": "Dépeçage",
+          "chance": 33
+        },
+        {
+          "name": "Carapace Balahara",
+          "rank": "Novice",
+          "method": "Dépeçage",
+          "chance": 25
+        },
+        {
+          "name": "Crâne Balahara",
+          "rank": "Novice",
+          "method": "Dépeçage",
+          "chance": 18
+        },
+        {
+          "name": "Queue Balahara",
+          "rank": "Novice",
+          "method": "Dépeçage",
+          "chance": 13
+        },
+        {
+          "name": "Perle noire Balahara",
+          "rank": "Novice",
+          "method": "Dépeçage",
+          "chance": 11
+        },
+        {
+          "name": "Queue Balahara",
+          "rank": "Novice",
+          "method": "Dépeçage de queue sectionnée",
+          "chance": 100
+        },
+        {
+          "name": "Crâne Balahara",
+          "rank": "Novice",
+          "method": "Bris de tête",
+          "chance": 80
+        },
+        {
+          "name": "Perle noire Balahara",
+          "rank": "Novice",
+          "method": "Bris de tête",
+          "chance": 20
+        }
+      ]
+    },
+    {
+      "id": "arkveld",
+      "name": "Arkveld",
+      "verificationStatus": "community-sourced-partial",
+      "source": "https://mhwilds.gamertw.com/fr/monster/arkveld",
+      "notes": "Les taux détaillés sont disponibles sur la source. Les méthodes spécifiques seront complétées.",
+      "materials": [
+        {
+          "name": "Certificat Arkveld S",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Écaille Arkveld +",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Armure de plates Arkveld",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Pelage blanc Arkveld",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Corne Arkveld +",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Queue Arkveld",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Gemme Arkveld",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Plaque cuirassée Arkveld",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        }
+      ]
+    },
+    {
+      "id": "rey-dau",
+      "name": "Rey Dau",
+      "verificationStatus": "community-sourced-partial",
+      "source": "https://mhwilds.gamertw.com/fr/monster/rey-dau",
+      "notes": "Version archi-tempérée : matériaux γ distincts à documenter.",
+      "materials": [
+        {
+          "name": "Écaille Rey Dau +",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Cuirasse Rey Dau",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Corne-tonnerre Rey Dau +",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Serre Rey Dau +",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Queue Rey Dau",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Gemme-tonnerre Rey Dau",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        }
+      ]
+    },
+    {
+      "id": "uth-duna",
+      "name": "Uth Duna",
+      "verificationStatus": "community-sourced-partial",
+      "source": "https://mhwilds.gamertw.com/fr/monster/uth-duna",
+      "notes": "Version archi-tempérée : matériaux γ distincts à documenter.",
+      "materials": [
+        {
+          "name": "Écaille Uth Duna +",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Peau Uth Duna +",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Cils Uth Duna +",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Griffe Uth Duna +",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Tentacule Uth Duna +",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Gemme d'eau Uth Duna",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        }
+      ]
+    },
+    {
+      "id": "nu-udra",
+      "name": "Nu Udra",
+      "verificationStatus": "community-sourced-partial",
+      "source": "https://mhwilds.gamertw.com/fr/monster/nu-udra",
+      "notes": "Version archi-tempérée : matériaux γ distincts à documenter.",
+      "materials": [
+        {
+          "name": "Peau Nu Udra +",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Mucus huileux Nu Udra +",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Pointe Nu Udra +",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Corne Nu Udra +",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Tentacule Nu Udra +",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Gemme de feu Nu Udra",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        }
+      ]
+    },
+    {
+      "id": "jin-dahaad",
+      "name": "Jin Dahaad",
+      "verificationStatus": "community-sourced-partial",
+      "source": "https://mhwilds.gamertw.com/fr/monster/jin-dahaad",
+      "notes": "Version archi-tempérée : matériaux γ distincts à documenter.",
+      "materials": [
+        {
+          "name": "Écaille Jin Dahaad +",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Cuirasse Jin Dahaad",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Plaque gelée Jin Dahaad",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Griffe Jin Dahaad +",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Corne Jin Dahaad",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Gemme de glace Jin Dahaad",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Certificat Jin Dahaad S",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        }
+      ]
+    },
+    {
+      "id": "gogmazios",
+      "name": "Gogmazios",
+      "verificationStatus": "community-sourced-partial",
+      "source": "https://mhwilds.gamertw.com/fr/armor/gogmazios-%CE%B1",
+      "notes": "Matériaux confirmés dans les recettes d'armures ; méthode et taux à confirmer.",
+      "materials": [
+        {
+          "name": "Certificat Gogmazios S",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Rempart Gogmazios",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Fortin Gogmazios",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Fléau Gogmazios",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Griffes Gogmazios",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Membrane Gogmazios",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Piqueue Gogmazios",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Gemme-dragon ravagée",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        },
+        {
+          "name": "Huile de dragon épaisse",
+          "rank": "Expert",
+          "method": "Butin du monstre (méthode à confirmer)",
+          "chance": null
+        }
+      ]
+    }
+  ]
+}

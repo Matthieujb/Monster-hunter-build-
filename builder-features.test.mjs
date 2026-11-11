@@ -1,0 +1,14 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {compatibleGems,evaluateGoals,compareBuilds,optimizeDecorations,encodeShare,decodeShare,validateCustomTalisman} from './builder-features.mjs';
+const read=n=>JSON.parse(readFileSync(new URL('./'+n,import.meta.url)));
+const manifest=read('manifest.json');const catalog={manifest,version:manifest.catalogVersion,equipment:read('equipment.json'),decorations:read('decorations.json'),skills:read('skills.json'),setBonuses:read('set-bonuses.json')};
+const build=()=>({catalogVersion:catalog.version,equipment:{weapon:'demo-weapon',head:'demo-helm',chest:'demo-mail',arms:'demo-gloves',waist:'demo-waist',legs:'demo-boots'},decorations:[]});
+test('joyaux filtrés par taille et catégorie',()=>{const slot={size:1,kind:'armor'};assert.ok(compatibleGems(slot,catalog.decorations).every(x=>x.size<=1&&x.kind==='armor'));assert.ok(!compatibleGems(slot,catalog.decorations).some(x=>x.id==='demo-hearing'));});
+test('objectifs calculés depuis les talents effectifs',()=>{const x=evaluateGoals(build(),catalog,{'demo-defense':3});assert.equal(x.matched,false);assert.equal(x.missing[0].actual,2);});
+test('optimiseur ne change pas les équipements',()=>{const b=build();const o=optimizeDecorations(b,catalog,{'demo-evasion':1});assert.deepEqual(o.build.equipment,b.equipment);assert.equal(o.complete,true);assert.equal(o.catalogCertified,false);});
+test('comparaison de deux builds',()=>{const a=build(),b=build();b.decorations=[{slotId:'demo-helm-2',decorationId:'demo-guard'}];const x=compareBuilds(a,b,catalog);assert.ok(x.skills.some(s=>s.id==='demo-defense'&&s.difference===1));});
+test('partage unicode et restauration',()=>{const b={...build(),title:'Épée et Bouchons d’oreilles'};assert.deepEqual(decodeShare(encodeShare(b)),b);});
+test('talisman limité à trois talents',()=>{const t={skills:{a:1,b:1,c:1,d:1}};assert.ok(validateCustomTalisman(t,catalog).length>0);});
+test('talisman inconnu rejeté',()=>{assert.ok(validateCustomTalisman({skills:{'talent-inconnu':1}},catalog).length>0);});

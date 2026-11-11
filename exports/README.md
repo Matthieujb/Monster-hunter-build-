@@ -1,0 +1,1 @@
+Version Sites 15 : catalogue illustré et retour en haut. Archive autonome sous site/. 26 tests de non-régression passent. Validation visuelle mobile à terminer avant publication. Les fichiers racine historiques ne sont pas remplacés.

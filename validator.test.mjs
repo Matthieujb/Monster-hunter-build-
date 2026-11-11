@@ -1,9 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {validateBuild} from '../src/domain/validate-build.mjs';
-import {verifyCatalog} from '../src/domain/catalog.mjs';
-const read = name => JSON.parse(readFileSync(new URL('../src/data/catalog/'+name,import.meta.url)));
+import {validateBuild} from './validate-build.mjs';
+import {verifyCatalog} from './catalog.mjs';
+const read = name => JSON.parse(readFileSync(new URL('./'+name,import.meta.url)));
 const manifest=read('manifest.json');
 const catalog={manifest,version:manifest.catalogVersion,equipment:read('equipment.json'),decorations:read('decorations.json'),skills:read('skills.json'),setBonuses:read('set-bonuses.json')};
 const build=()=>({catalogVersion:catalog.version,equipment:{weapon:'demo-weapon',head:'demo-helm',chest:'demo-mail',arms:'demo-gloves',waist:'demo-waist',legs:'demo-boots'},decorations:[]});
@@ -15,8 +15,10 @@ test('emplacement partagé interdit',()=>{const b=build();b.decorations=[{slotId
 test('équipement manquant -> incomplet',()=>{const b=build();delete b.equipment.head;assert.equal(validateBuild(b,catalog).status,'incomplete');});
 test('équipement inconnu interdit',()=>{const b=build();b.equipment.head='not-real';assert.ok(validateBuild(b,catalog).errors.some(x=>x.code==='UNKNOWN_EQUIPMENT'));});
 test('sous-bonus désactivé avec une seule pièce',()=>{const b=build();delete b.equipment.chest;assert.deepEqual(validateBuild(b,catalog).activeSetBonuses,[]);});
-test('plafond des talents : warning et valeur limitée',()=>{const b=build();b.talisman={verificationStatus:'verified',skills:{'demo-defense':8}};const r=validateBuild(b,catalog);assert.equal(r.effectiveSkills['demo-defense'],5);assert.ok(r.warnings.some(x=>x.code==='SKILL_OVERFLOW'));});
+test('niveau de talisman excessif rejeté sans contribuer aux talents',()=>{const b=build();b.talisman={verificationStatus:'verified',skills:{'demo-defense':8}};const r=validateBuild(b,catalog);assert.equal(r.status,'invalid');assert.equal(r.effectiveSkills['demo-defense'],2);assert.ok(r.errors.some(x=>x.code==='INVALID_TALISMAN_SKILL'));});
 test('talisman de plus de 3 compétences invalide',()=>{const b=build();b.talisman={verificationStatus:'verified',skills:{a:1,b:1,c:1,d:1}};assert.ok(validateBuild(b,catalog).errors.some(x=>x.code==='INVALID_TALISMAN'));});
 test('version différente signalée',()=>{const b=build();b.catalogVersion='old';assert.ok(validateBuild(b,catalog).warnings.some(x=>x.code==='CATALOG_VERSION_MISMATCH'));});
 test('joyau compatible ajoute son talent',()=>{const b=build();b.decorations=[{slotId:'demo-helm-2',decorationId:'demo-guard'}];assert.equal(validateBuild(b,catalog).effectiveSkills['demo-defense'],3);});
 test('régression : validation ne modifie pas le build original',()=>{const b=build();const before=JSON.stringify(b);validateBuild(b,catalog);assert.equal(JSON.stringify(b),before);});
+
+test('talisman au-delà du niveau maximal interdit',()=>{const b=build();b.talisman={verificationStatus:'verified',skills:{'demo-defense':6}};assert.ok(validateBuild(b,catalog).errors.some(x=>x.code==='INVALID_TALISMAN_SKILL'));});
