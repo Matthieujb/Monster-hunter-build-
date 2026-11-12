@@ -1,0 +1,11 @@
+import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';
+import {applyCatalogLink} from '../dist/advanced/catalog-link.mjs';
+import {validateBuild} from '../dist/advanced/validate-build.mjs';
+const read=n=>JSON.parse(fs.readFileSync(new URL('../dist/advanced/'+n+'.json',import.meta.url)));
+const c={manifest:read('manifest'),equipment:read('equipment'),decorations:read('decorations'),skills:read('skills'),setBonuses:read('set-bonuses'),charms:read('charms')};c.version=c.manifest.catalogVersion;
+const empty=()=>({catalogVersion:c.version,equipment:{},decorations:[]});
+test('liens pour chaque emplacement et talisman',()=>{for(const part of ['head','chest','arms','waist','legs','weapon']){const e=c.equipment.find(x=>x.part===part),b=empty(),r=applyCatalogLink(b,c,'?equipment='+e.id.replace('-',':'));assert.equal(r.build.equipment[part],e.id);assert.deepEqual(b,empty())}const charm=c.charms[0];assert.equal(applyCatalogLink(empty(),c,'?equipment='+charm.id.replace('-',':')).build.talisman.id,charm.id)});
+test('joyau retrouvé sans placement illégal',()=>{const g=c.decorations[0],r=applyCatalogLink(empty(),c,'?jewel='+g.id.slice(4));assert.equal(r.gem.id,g.id);assert.deepEqual(r.build.decorations,[])});
+test('build partagé prioritaire sur query',()=>{const b=empty();assert.equal(applyCatalogLink(b,c,'?equipment='+c.equipment[0].id.replace('-',':'),'#build=abc').build,b)});
+test('paramètres inconnus préservent le build',()=>{const b=empty();assert.equal(applyCatalogLink(b,c,'?equipment=foo:1').build,b)});
+test('format import invalide donne un rapport sans exception',()=>{for(const b of [null,[],{}, {equipment:[],decorations:[]},{equipment:{},decorations:{}}])assert.equal(validateBuild(b,c).status,'invalid');const b=empty();b.decorations=[null];assert.equal(validateBuild(b,c).status,'invalid')});
