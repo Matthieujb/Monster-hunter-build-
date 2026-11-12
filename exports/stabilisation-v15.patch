@@ -1,0 +1,206 @@
+diff --git a/dist/advanced/build-library.mjs b/dist/advanced/build-library.mjs
+index 443988d..6ba963a 100644
+--- a/dist/advanced/build-library.mjs
++++ b/dist/advanced/build-library.mjs
+@@ -1,9 +1,15 @@
+ // Stockage local : aucune donnée transmise au serveur.
+ export function saveBuild(storage,build,{name='Montage sans nom',max=30}={}){
+  if(typeof name!=='string'||name.length>80||!name.trim())throw Error('Nom invalide');
+- const existing=listBuilds(storage);if(existing.length>=max)throw Error('Bibliothèque pleine');
++ const existing=readLibrary(storage);if(existing.length>=max)throw Error('Bibliothèque pleine');
+  const record={id:'build-'+Date.now()+'-'+Math.random().toString(36).slice(2,8),name:name.trim(),savedAt:new Date().toISOString(),build:structuredClone(build)};
+  storage.setItem('wilds-build-library-v1',JSON.stringify([...existing,record]));return record;
+ }
+-export function listBuilds(storage){try{const x=JSON.parse(storage.getItem('wilds-build-library-v1')||'[]');return Array.isArray(x)?x.filter(r=>r&&typeof r.id==='string'&&r.build?.equipment&&Array.isArray(r.build.decorations)):[]}catch{return []}}
+-export function removeBuild(storage,id){const list=listBuilds(storage);const updated=list.filter(r=>r.id!==id);storage.setItem('wilds-build-library-v1',JSON.stringify(updated));return updated.length!==list.length}
++export function readLibrary(storage){
++ let x;
++ try{x=JSON.parse(storage.getItem('wilds-build-library-v1')??'[]')}catch{throw Error('Bibliothèque illisible ou inaccessible. Données conservées.');}
++ if(!Array.isArray(x)||x.some(r=>!r||typeof r.id!=='string'||!r.build?.equipment||!Array.isArray(r.build.decorations)))throw Error('Bibliothèque mal structurée. Données conservées.');
++ return x;
++}
++export function listBuilds(storage){try{return readLibrary(storage)}catch{return []}}
++export function removeBuild(storage,id){const list=readLibrary(storage);const updated=list.filter(r=>r.id!==id);storage.setItem('wilds-build-library-v1',JSON.stringify(updated));return updated.length!==list.length}
+diff --git a/dist/advanced/builder-app.mjs b/dist/advanced/builder-app.mjs
+index eb711a9..e3a7569 100644
+--- a/dist/advanced/builder-app.mjs
++++ b/dist/advanced/builder-app.mjs
+@@ -1,9 +1,10 @@
++import {applyCatalogLink} from './catalog-link.mjs';
+ import {filterEquipment,replaceEquipment,weaponLabels} from './equipment-picker.mjs';
+ import {migrateLegacy} from './legacy-builds.mjs';
+ import {validateBuild} from './validate-build.mjs';
+ import {estimatePhysicalDamage} from './damage-engine.mjs';
+ import {optimizeEquipment} from './build-optimizer.mjs';
+-import {saveBuild,listBuilds,removeBuild} from './build-library.mjs';
++import {saveBuild,listBuilds,removeBuild,readLibrary} from './build-library.mjs';
+ import {optimizeDecorations,compareBuilds,encodeShare,decodeShare,validateCustomTalisman} from './builder-features.mjs';
+ const snapshots=[];
+ function setupAdvanced(){
+@@ -16,7 +17,7 @@ function setupAdvanced(){
+  $('applyWeapon').onclick=()=>{const system=$('weaponSystem').value;build.weaponConfiguration=system?{system,notes:$('weaponNotes').value,verificationStatus:'example-only'}:{};render()};
+  $('snapshotBtn').onclick=()=>{if(snapshots.length===3){$('compareResult').textContent='Trois montages déjà épinglés. Le plus ancien est remplacé.';snapshots.shift()}snapshots.push(structuredClone(build));$('compareResult').textContent=snapshots.length+' montage(s) épinglé(s).'};
+  $('compareBtn').onclick=()=>{const records=snapshots.length?snapshots:[build];const reports=records.map(b=>validateBuild(b,catalog));const target=$('compareResult');target.replaceChildren();const table=el('table'),head=el('tr');head.append(el('th','','Talent'));records.forEach((b,i)=>head.append(el('th','','Montage '+(i+1))));table.append(head);for(const id of new Set(reports.flatMap(r=>Object.keys(r.effectiveSkills)))){const row=el('tr');row.append(el('th','',catalog.skills.find(s=>s.id===id)?.name||id));for(const r of reports)row.append(el('td','',String(r.effectiveSkills[id]||0)));table.append(row)}target.append(table)};
+- $('shareBtn').onclick=async()=>{const url=new URL(location.href);url.hash='build='+encodeShare(build);try{await navigator.clipboard.writeText(url.href);$('compareResult').textContent='Lien copié.'}catch{$('compareResult').textContent=url.href}};
++ $('shareBtn').onclick=async()=>{const url=new URL(location.href);url.search='';url.hash='build='+encodeShare(build);try{await navigator.clipboard.writeText(url.href);$('compareResult').textContent='Lien copié.'}catch{$('compareResult').textContent=url.href}};
+  try{const params=new URLSearchParams(location.hash.slice(1));const token=params.get('build');if(token){const imported=decodeShare(token);if(imported.catalogVersion===catalog.version){build=imported;render();$('compareResult').textContent='Build importé depuis le lien.'}else $('compareResult').textContent='Version du catalogue incompatible avec le lien.'}}catch(e){$('compareResult').textContent='Lien invalide : '+e.message}
+ }
+ 
+@@ -57,7 +58,7 @@ function gemCards(){const q=$('searchGem').value.toLocaleLowerCase('fr-FR'),kind
+ function damage(){try{const x=estimatePhysicalDamage({trueRaw:Number($('attack').value),motionValue:Number($('motion').value),hitzone:Number($('hitzone').value),sharpness:Number($('sharpness').value),affinity:Number($('affinity').value),criticalMultiplier:Number($('criticalMultiplier').value),otherMultiplier:Number($('otherMultiplier').value)});$('damageValue').textContent=x.expected.toFixed(1)}catch(e){$('damageValue').textContent='Paramètres invalides'}}
+ async function init(){try {const [manifest,equipment,decorations,skills,setBonuses,charms]=await Promise.all(['manifest.json','equipment.json','decorations.json','skills.json','set-bonuses.json','charms.json'].map(read));catalog={manifest,version:manifest.catalogVersion,equipment,decorations,skills,setBonuses,charms};build=defaultBuild();$('version').textContent=catalog.version;render();gemCards();damage();setupAdvanced();setupLibraryAndOptimizer();setupUnified();loadBestiaryAndCrafting();loadHunter3D();}catch(e){$('status').textContent='CHARGEMENT IMPOSSIBLE';$('selectedPiece').textContent=String(e);console.error(e)}}
+ $('menuToggle').addEventListener('click',()=>{const show=$('navigation').classList.toggle('open');$('menuToggle').setAttribute('aria-expanded',String(show))});document.querySelectorAll('nav a').forEach(a=>a.addEventListener('click',()=>{$('navigation').classList.remove('open');document.querySelectorAll('nav a').forEach(x=>x.classList.toggle('active',x===a))}));
+-$('saveBtn').addEventListener('click',()=>{if(!build)return;localStorage.setItem(localKey,JSON.stringify(build));alert('Build sauvegardé sur ce navigateur.')});
++$('saveBtn').addEventListener('click',()=>{if(!build)return;try{localStorage.setItem(localKey,JSON.stringify(build));alert('Build sauvegardé sur ce navigateur.')}catch{alert('Sauvegarde impossible : stockage indisponible ou plein. Exportez votre montage.')} });
+ $('loadBtn').addEventListener('click',()=>{try{const saved=JSON.parse(localStorage.getItem(localKey));if(!saved){alert('Aucune sauvegarde.');return}if(saved.catalogVersion!==catalog.version)throw Error('Catalogue incompatible');if(!saved.equipment||!Array.isArray(saved.decorations))throw Error('Format invalide');build=saved;render()}catch(e){alert('Chargement impossible : '+e.message)}});
+ $('clearBtn').addEventListener('click',()=>{if(!catalog)return;build=defaultBuild();render()});$('searchGem').addEventListener('input',gemCards);$('gemType').addEventListener('change',gemCards);for(const id of ['attack','motion','hitzone','sharpness','affinity','criticalMultiplier','otherMultiplier'])$(id).addEventListener('input',damage);if($('copyBtn'))$('copyBtn').addEventListener('click',()=>{const blob=new Blob([JSON.stringify(build,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='wilds-build.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)});init();
+ 
+@@ -77,7 +78,7 @@ async function loadHunter3D(){
+ 
+ function setupLibraryAndOptimizer(){
+  const target=$('buildLibrary');
+- const refresh=()=>{target.replaceChildren();for(const record of listBuilds(localStorage)){const row=el('div','editor-row');const load=el('button','secondary',record.name);load.type='button';load.onclick=()=>{if(record.build.catalogVersion!==catalog.version){alert('Catalogue incompatible.');return}build=structuredClone(record.build);render()};const remove=el('button','secondary','Supprimer');remove.type='button';remove.onclick=()=>{removeBuild(localStorage,record.id);refresh()};row.append(load,remove);target.append(row)}if(!target.children.length)target.textContent='Aucun montage enregistré.'};
++ const refresh=()=>{target.replaceChildren();let records;try{records=readLibrary(localStorage)}catch(e){target.textContent=e.message;return}for(const record of records){const row=el('div','editor-row');const load=el('button','secondary',record.name);load.type='button';load.onclick=()=>{if(record.build.catalogVersion!==catalog.version){alert('Catalogue incompatible.');return}build=structuredClone(record.build);render()};const remove=el('button','secondary','Supprimer');remove.type='button';remove.onclick=()=>{try{removeBuild(localStorage,record.id);refresh()}catch(e){alert(e.message)}};row.append(load,remove);target.append(row)}if(!target.children.length)target.textContent='Aucun montage enregistré.'};
+  $('librarySave').onclick=()=>{try{saveBuild(localStorage,build,{name:$('buildName').value||'Montage sans nom'});refresh()}catch(e){alert(e.message)}};refresh();
+  $('optimizeEquipmentBtn').onclick=async()=>{const goals={};for(const n of $('goalEditor').querySelectorAll('input')){const v=Number(n.value);if(v>0)goals[n.dataset.skill]=Math.min(v,Number(n.max))}if(!Object.keys(goals).length){$('equipmentOptimizeResult').textContent='Sélectionnez un objectif dans OPTIMISEUR DPS / CONFORT.';return}
+  let result;try{result=await runOptimization('equipment',goals)}catch(e){$('equipmentOptimizeResult').textContent=e.message;return}
+@@ -128,7 +129,11 @@ function setupUnified(){
+  const root=$('legacyBuilds');
+  try{const records=JSON.parse(localStorage.getItem('wilds-builds')||'[]');for(const record of records){const button=el('button','secondary',record.title||'Ancien montage');button.onclick=()=>{try{build=migrateLegacy(record,catalog);$('buildName').value=record.title||'';render();$('migrationMessage').textContent='Montage chargé. Vérifiez les éventuelles incompatibilités avant de l’enregistrer dans la bibliothèque.'}catch(e){$('migrationMessage').textContent=e.message}};root.append(button)}if(!records.length)root.textContent='Aucun ancien montage sur cet appareil.'}catch{root.textContent='Archives illisibles ; les données originales sont conservées.'}
+  $('exportLegacy').onclick=()=>{const blob=new Blob([localStorage.getItem('wilds-builds')||'[]'],{type:'application/json'});const url=URL.createObjectURL(blob),a=el('a');a.href=url;a.download='wilds-anciens-builds.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};
+- const params=new URLSearchParams(location.search),ref=params.get('equipment');if(ref){const [type,id]=ref.split(':');if(type==='charm'){build.talisman=catalog.charms.find(c=>c.id==='charm-'+id);render();return}const item=catalog.equipment.find(x=>x.id===(type==='weapon'?'weapon-':'armor-')+id);if(item){part=item.part;build.equipment[part]=item.id;render()}}
++ const linked=applyCatalogLink(build,catalog,location.search,location.hash);
++ build=linked.build;if(linked.part)part=linked.part;render();
++ if(linked.gem){$('searchGem').value=linked.gem.name;$('gemType').value=linked.gem.kind;gemCards()}
++ if(linked.message)$('selectionMessage').textContent=linked.message;
++
+ }
+ 
+ function runOptimization(kind,goals){
+diff --git a/dist/advanced/builder-features.test.mjs b/dist/advanced/builder-features.test.mjs
+index 54e34fa..769b937 100644
+--- a/dist/advanced/builder-features.test.mjs
++++ b/dist/advanced/builder-features.test.mjs
+@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
+ import {readFileSync} from 'node:fs';
+ import {compatibleGems,evaluateGoals,compareBuilds,optimizeDecorations,encodeShare,decodeShare,validateCustomTalisman} from './builder-features.mjs';
+ const read=n=>JSON.parse(readFileSync(new URL('./'+n,import.meta.url)));
+-const manifest=read('manifest.json');const catalog={manifest,version:manifest.catalogVersion,equipment:read('equipment.json'),decorations:read('decorations.json'),skills:read('skills.json'),setBonuses:read('set-bonuses.json')};
++import {catalog} from './test-fixture.mjs';
+ const build=()=>({catalogVersion:catalog.version,equipment:{weapon:'demo-weapon',head:'demo-helm',chest:'demo-mail',arms:'demo-gloves',waist:'demo-waist',legs:'demo-boots'},decorations:[]});
+ test('joyaux filtrés par taille et catégorie',()=>{const slot={size:1,kind:'armor'};assert.ok(compatibleGems(slot,catalog.decorations).every(x=>x.size<=1&&x.kind==='armor'));assert.ok(!compatibleGems(slot,catalog.decorations).some(x=>x.id==='demo-hearing'));});
+ test('objectifs calculés depuis les talents effectifs',()=>{const x=evaluateGoals(build(),catalog,{'demo-defense':3});assert.equal(x.matched,false);assert.equal(x.missing[0].actual,2);});
+diff --git a/dist/advanced/catalog-link.mjs b/dist/advanced/catalog-link.mjs
+new file mode 100644
+index 0000000..0a651db
+--- /dev/null
++++ b/dist/advanced/catalog-link.mjs
+@@ -0,0 +1,17 @@
++import {replaceEquipment} from './equipment-picker.mjs';
++// A shared build is authoritative: stale catalogue parameters must not alter it.
++export function applyCatalogLink(build,catalog,search,hash=''){
++ if(new URLSearchParams(hash.slice(1)).has('build'))return {build};
++ const params=new URLSearchParams(search),ref=params.get('equipment');let part,message;
++ if(ref){const [kind,id,...extra]=ref.split(':');
++  if(!extra.length&&id&&['armor','weapon','charm'].includes(kind)){
++   if(kind==='charm'){const charm=catalog.charms.find(c=>c.id==='charm-'+id);if(charm){build={...build,talisman:charm};message=charm.name+' sélectionné.'}}
++   else {const item=catalog.equipment.find(e=>e.id===kind+'-'+id);if(item){part=item.part;build=replaceEquipment(build,catalog,part,item.id);message=item.name+' équipé depuis le catalogue.'}}
++  }
++  message ||= 'Équipement introuvable dans cette version du catalogue. Montage conservé.';
++ }
++ const jewel=params.get('jewel'),gem=catalog.decorations.find(g=>g.id==='gem-'+jewel);
++ if(gem)message=gem.name+' retrouvé. Choisissez un emplacement compatible pour l’équiper.';
++ else if(jewel)message='Joyau introuvable dans cette version du catalogue.';
++ return {build,part,gem,message};
++}
+diff --git a/dist/advanced/new-features.test.mjs b/dist/advanced/new-features.test.mjs
+index 00a4a30..b0dcbdf 100644
+--- a/dist/advanced/new-features.test.mjs
++++ b/dist/advanced/new-features.test.mjs
+@@ -4,13 +4,13 @@ import {optimizeEquipment} from './build-optimizer.mjs';
+ import {saveBuild,listBuilds,removeBuild} from './build-library.mjs';
+ import {readFileSync} from 'node:fs';
+ const json=n=>JSON.parse(readFileSync(new URL('./'+n,import.meta.url),'utf8'));
+-const manifest=json('manifest.json'),catalog={manifest,version:manifest.catalogVersion,equipment:json('equipment.json'),decorations:json('decorations.json'),skills:json('skills.json'),setBonuses:json('set-bonuses.json')};
++import {catalog} from './test-fixture.mjs';
+ const build={catalogVersion:catalog.version,equipment:{weapon:'demo-weapon',head:'demo-helm',chest:'demo-mail',arms:'demo-gloves',waist:'demo-waist',legs:'demo-boots'},decorations:[]};
+ test('Dégâts de base et espérance critique positive',()=>{const x=estimatePhysicalDamage({trueRaw:200,motionValue:50,hitzone:50,sharpness:1,affinity:100,criticalMultiplier:1.25,otherMultiplier:1});assert.equal(x.base,50);assert.equal(x.expected,62.5);assert.equal(x.verifiedFormula,false)});
+ test('Affinité négative et entrées invalides',()=>{const base={trueRaw:200,motionValue:50,hitzone:50,sharpness:1,affinity:-100,criticalMultiplier:1.25,otherMultiplier:1};assert.equal(estimatePhysicalDamage(base).expected,37.5);assert.throws(()=>estimatePhysicalDamage({...base,affinity:101}))});
+ test('Optimisation équipement et joyaux du catalogue demo',()=>{const x=optimizeEquipment(build,catalog,{'demo-evasion':1},{limit:250,gemLimit:1500});assert.ok(x.build);assert.equal(x.complete,true);assert.equal(x.catalogCertified,false)});
+ test('Bibliothèque locale : sauvegarde, liste, suppression',()=>{const data=new Map();const storage={getItem:k=>data.get(k)||null,setItem:(k,v)=>data.set(k,v)};const r=saveBuild(storage,build,{name:'Test'});assert.equal(listBuilds(storage)[0].name,'Test');assert.ok(removeBuild(storage,r.id));assert.equal(listBuilds(storage).length,0)});
+-test('Bestiaire et fabrication : ne pas présenter des données non vérifiées',()=>{assert.equal(json('bestiary.json').verificationStatus,'community-sourced-partial');assert.equal(json('bestiary.json').monsters.length,10);assert.ok(json('bestiary.json').monsters.every(m=>m.source.startsWith('https://')&&m.materials.every(x=>(x.chance===null||(Number.isInteger(x.chance)&&x.chance>=0&&x.chance<=100))&&['Novice','Expert'].includes(x.rank))));assert.deepEqual(json('crafting.json').recipes,[])});
++test('Bestiaire et fabrication : ne pas présenter des données non vérifiées',()=>{assert.equal(json('bestiary.json').verificationStatus,'community-sourced-partial');assert.equal(json('bestiary.json').monsters.length,10);assert.ok(json('bestiary.json').monsters.every(m=>m.source.startsWith('https://')&&m.materials.every(x=>(x.chance===null||(Number.isInteger(x.chance)&&x.chance>=0&&x.chance<=100))&&['Novice','Expert'].includes(x.rank))));assert.ok(Array.isArray(json('crafting.json').recipes))});
+ 
+ test('Bestiaire : sources, rangs, probabilité et dépeçage vérifiables',()=>{const m=json('bestiary.json').monsters;assert.equal(m.find(x=>x.id==='chatacabra').materials.find(x=>x.name==='Écaille Chatacabra'&&x.method==='Dépeçage').chance,35);assert.equal(m.find(x=>x.id==='balahara').materials.find(x=>x.name==='Queue Balahara'&&x.method==='Dépeçage de queue sectionnée').chance,100);assert.equal(m.find(x=>x.id==='doshaguma').materials.find(x=>x.name==='Griffe Doshaguma'&&x.method==='Bris de patte avant').chance,100)});
+ 
+diff --git a/dist/advanced/test-fixture.mjs b/dist/advanced/test-fixture.mjs
+new file mode 100644
+index 0000000..32dc68c
+--- /dev/null
++++ b/dist/advanced/test-fixture.mjs
+@@ -0,0 +1,8 @@
++// Catalogue SYNTHÉTIQUE réservé aux tests. Jamais importé par l’application.
++const skill=(id,maxLevel)=>({id,name:id,maxLevel,kind:'armor'});
++const item=(id,part,skills={},slots=[],setId)=>({id,part,name:id,skills,slots,setId,verificationStatus:'example-only'});
++export const catalog={version:'fixture-v1',manifest:{verificationStatus:'example-only'},
++ skills:[skill('demo-defense',5),skill('demo-evasion',3),skill('demo-hearing',3)],
++ equipment:[item('demo-weapon','weapon',{},[{id:'demo-weapon-1',size:3,kind:'weapon'}]),item('demo-helm','head',{'demo-defense':1},[{id:'demo-helm-1',size:3,kind:'armor'},{id:'demo-helm-2',size:1,kind:'armor'}],'demo-set'),item('demo-mail','chest',{'demo-defense':1},[],'demo-set'),item('demo-gloves','arms'),item('demo-waist','waist'),item('demo-boots','legs')],
++ decorations:[{id:'demo-guard',name:'Test défense',size:1,kind:'armor',skills:{'demo-defense':1}},{id:'demo-evasion',name:'Test esquive',size:1,kind:'armor',skills:{'demo-evasion':1}},{id:'demo-hearing',name:'Test ouïe',size:3,kind:'armor',skills:{'demo-hearing':1}}],
++ setBonuses:[{id:'demo-bonus',setId:'demo-set',requiredPieces:2,skills:{}}]};
+diff --git a/dist/advanced/validate-build.mjs b/dist/advanced/validate-build.mjs
+index b190ca3..7e6b61a 100644
+--- a/dist/advanced/validate-build.mjs
++++ b/dist/advanced/validate-build.mjs
+@@ -5,7 +5,7 @@ export function validateBuild(build, catalog, options={}) {
+   const issue=(severity,code,message,context={})=> (severity==='error'?errors:warnings).push({severity,code,message,...context});
+   const check=verifyCatalog(catalog);
+   if(!check.ok){ for(const code of check.errors) issue('error','CATALOG_INVALID',code); return {status:'invalid',errors,warnings,rawSkills,effectiveSkills,activeSetBonuses,catalogVersion:catalog?.version??null,certified:false}; }
+-  if(!build || typeof build!=='object') {issue('error','BUILD_INVALID','Build manquant');return {status:'invalid',errors,warnings,rawSkills,effectiveSkills,activeSetBonuses,catalogVersion:catalog.version,certified:false};}
++  if(!build || typeof build!=='object' || Array.isArray(build) || !build.equipment || typeof build.equipment!=='object' || Array.isArray(build.equipment) || !Array.isArray(build.decorations)) {issue('error','BUILD_INVALID','Build manquant');return {status:'invalid',errors,warnings,rawSkills,effectiveSkills,activeSetBonuses,catalogVersion:catalog.version,certified:false};}
+   const index=indexCatalog(catalog), equipped=[], expectedParts=['weapon','head','chest','arms','waist','legs'];
+   const equipmentByPart=build.equipment||{};
+   let incomplete=false;
+@@ -62,7 +62,7 @@ export function validateBuild(build, catalog, options={}) {
+   }
+   const patchMismatch=build.catalogVersion && build.catalogVersion!==catalog.version;
+   if(patchMismatch)issue('warning','CATALOG_VERSION_MISMATCH',`Build ${build.catalogVersion}, catalogue ${catalog.version}`);
+-  const unverified=[...equipped,...(build.decorations||[]).map(x=>index.decorations.get(x.decorationId)).filter(Boolean),...catalog.setBonuses.filter(x=>activeSetBonuses.includes(x.id))].some(x=>x.verificationStatus!=='verified');
++  const unverified=[...equipped,...(build.decorations||[]).map(x=>index.decorations.get(x?.decorationId)).filter(Boolean),...catalog.setBonuses.filter(x=>activeSetBonuses.includes(x.id))].some(x=>x.verificationStatus!=='verified');
+   if(unverified||catalog.manifest.verificationStatus!=='verified')issue('warning','UNVERIFIED_DATA','Données illustratives ou non vérifiées : aucune certification possible');
+   if(Object.keys(build.weaponConfiguration||{}).length)issue('warning','WEAPON_CONFIGURATION_UNVERIFIED','Configuration d’arme spécifique à confirmer avec des règles vérifiées');
+   const status=errors.length?'invalid':incomplete?'incomplete':'valid';
+diff --git a/dist/advanced/validator.test.mjs b/dist/advanced/validator.test.mjs
+index 1e588e2..1d2ad4b 100644
+--- a/dist/advanced/validator.test.mjs
++++ b/dist/advanced/validator.test.mjs
+@@ -4,8 +4,7 @@ import {readFileSync} from 'node:fs';
+ import {validateBuild} from './validate-build.mjs';
+ import {verifyCatalog} from './catalog.mjs';
+ const read = name => JSON.parse(readFileSync(new URL('./'+name,import.meta.url)));
+-const manifest=read('manifest.json');
+-const catalog={manifest,version:manifest.catalogVersion,equipment:read('equipment.json'),decorations:read('decorations.json'),skills:read('skills.json'),setBonuses:read('set-bonuses.json')};
++import {catalog} from './test-fixture.mjs';
+ const build=()=>({catalogVersion:catalog.version,equipment:{weapon:'demo-weapon',head:'demo-helm',chest:'demo-mail',arms:'demo-gloves',waist:'demo-waist',legs:'demo-boots'},decorations:[]});
+ test('catalogue de démonstration cohérent',()=>assert.equal(verifyCatalog(catalog).ok,true));
+ test('build structurellement valide mais non certifiable avec exemples',()=>{const r=validateBuild(build(),catalog);assert.equal(r.status,'valid');assert.equal(r.certified,false);assert.ok(r.warnings.some(x=>x.code==='UNVERIFIED_DATA'));assert.deepEqual(r.activeSetBonuses,['demo-bonus']);});
+diff --git a/dist/visuals.css b/dist/visuals.css
+index 3ec8b74..754181f 100644
+--- a/dist/visuals.css
++++ b/dist/visuals.css
+@@ -1 +1,2 @@
+-.added-art{margin:0;text-align:center;background:radial-gradient(ellipse,#44583b55,transparent 70%)}.added-art img{width:100%;height:180px;object-fit:contain}.added-art figcaption{font-size:10px;color:#b8c4ab;padding:6px}.equipment-button .added-art{width:60px;flex-shrink:0}.equipment-button .added-art img{height:65px}.equipment-button figcaption{display:none}.bestiary-card>.added-art{float:right;width:85px}.bestiary-card>.added-art img{height:85px}.gear-choice .added-art{width:100%}#backToTop{position:fixed;right:20px;bottom:calc(20px + env(safe-area-inset-bottom));z-index:999;width:48px;height:48px;background:#20382e;color:#e7c989;border:1px solid #d6b879;border-radius:50%;font-size:28px;cursor:pointer}#backToTop[hidden]{display:none}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}}
+\ No newline at end of file
++.added-art{margin:0;text-align:center;background:radial-gradient(ellipse,#44583b55,transparent 70%)}.added-art img{width:100%;height:180px;object-fit:contain}.added-art figcaption{font-size:10px;color:#b8c4ab;padding:6px}.equipment-button .added-art{width:60px;flex-shrink:0}.equipment-button .added-art img{height:65px}.equipment-button figcaption{display:none}.bestiary-card>.added-art{float:right;width:85px}.bestiary-card>.added-art img{height:85px}.gear-choice .added-art{width:100%}#backToTop{position:fixed;right:20px;bottom:calc(20px + env(safe-area-inset-bottom));z-index:999;width:48px;height:48px;background:#20382e;color:#e7c989;border:1px solid #d6b879;border-radius:50%;font-size:28px;cursor:pointer}#backToTop[hidden]{display:none}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}}
++.bestiary-card summary .added-art{display:inline-block;width:75px;vertical-align:middle;margin-left:12px}.bestiary-card summary .added-art img{height:75px}.bestiary-card summary figcaption{display:none}
+diff --git a/dist/visuals.js b/dist/visuals.js
+index 8630c53..8c80826 100644
+--- a/dist/visuals.js
++++ b/dist/visuals.js
+@@ -1,3 +1,3 @@
+ (()=>{const base=new URL('.',document.currentScript.src);const palette={white:['#e5e5dd','Blanc'],gray:['#969b9e','Gris'],rose:['#df7790','Rose'],pink:['#e79ed0','Rose clair'],red:['#de4c4c','Rouge'],vermilion:['#ec6548','Vermillon'],orange:['#e7a14a','Orange'],brown:['#ac7b50','Brun'],ivory:['#e6d7b0','Ivoire'],yellow:['#e4ce54','Jaune'],lemon:['#dce76b','Citron'], 'sage-green':['#a6b98b','Vert sauge'],'moss-green':['#81944d','Vert mousse'],green:['#65b86b','Vert'],emerald:['#4cc299','Émeraude'],sky:['#85c9df','Bleu ciel'],blue:['#528fce','Bleu'],ultramarine:['#6174de','Outremer'],'blue-purple':['#9582d7','Bleu violet'],purple:['#b37ad1','Violet'],'dark-purple':['#8651ad','Violet foncé']};let data;const make=(info)=>{const f=document.createElement('figure');f.className='added-art';const i=new Image();i.src=info.src;i.alt=info.caption;i.loading='lazy';i.decoding='async';i.width=160;i.height=180;const c=document.createElement('figcaption');c.textContent=info.caption;i.onerror=()=>{i.hidden=true;c.textContent='Visuel indisponible'};f.append(i,c);return f};
+-function decorate(){if(!data)return;document.querySelectorAll('.monsterCard,.bestiary-card,.equipmentCard,.gear-choice,.equipment-button,.gemcard').forEach(card=>{if(card.dataset.illustrated)return;card.dataset.illustrated='true';const heading=card.querySelector('h3,strong,summary,small');let name=heading?.textContent.trim()||'';if(card.matches('.equipment-button'))name=card.querySelector('small')?.textContent.trim()||'';const info=data.armor[name]||data.monsters[name]||Object.entries(data.monsters).find(([n])=>name.startsWith(n+' · '))?.[1];if(info){const target=card.querySelector('.monsterVisual,.equipmentCardArt')||card;if(target!==card)target.replaceChildren();target.prepend(make(info))}else if(card.matches('.gemcard')){const color=palette[data.gems[name]]?.[0]||'#bbb';const icon=card.querySelector('.gem-icon');if(icon){icon.textContent='◆';icon.style.color=color;icon.style.fontSize='42px';icon.style.textShadow='2px 3px 0 #ffffff44'}}});}
+-fetch(new URL('visuals.json',base)).then(r=>r.json()).then(d=>{data=d;decorate()});new MutationObserver(decorate).observe(document.body,{childList:true,subtree:true});const b=document.createElement('button');b.id='backToTop';b.type='button';b.textContent='↑';b.setAttribute('aria-label','Remonter en haut de la page');b.hidden=true;document.body.append(b);window.addEventListener('scroll',()=>{b.hidden=scrollY<400},{passive:true});b.onclick=()=>window.scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});})();
+\ No newline at end of file
++function decorate(){if(!data)return;document.querySelectorAll('.monsterCard,.bestiary-card,.equipmentCard,.gear-choice,.equipment-button,.gemcard').forEach(card=>{if(card.dataset.illustrated)return;card.dataset.illustrated='true';const heading=card.querySelector('h3,strong,summary,small');let name=heading?.textContent.trim()||'';if(card.matches('.equipment-button'))name=card.querySelector('small')?.textContent.trim()||'';const info=data.armor[name]||data.monsters[name]||Object.entries(data.monsters).find(([n])=>name.startsWith(n+' · '))?.[1];if(info){const target=card.querySelector('.monsterVisual,.equipmentCardArt')||card;if(card.matches('.bestiary-card'))card.querySelector('summary').append(make(info));else {if(target!==card)target.querySelectorAll('img,svg,.added-art').forEach(n=>n.remove());target.prepend(make(info))}}else if(card.matches('.gemcard')){const color=palette[data.gems[name]]?.[0]||'#bbb';const icon=card.querySelector('.gem-icon');if(icon){icon.textContent='◆';icon.style.color=color;icon.style.fontSize='42px';icon.style.textShadow='2px 3px 0 #ffffff44'}}});}
++fetch(new URL('visuals.json',base)).then(r=>r.json()).then(d=>{data=d;decorate()}).catch(()=>{document.body.dataset.illustrations='unavailable'});new MutationObserver(decorate).observe(document.body,{childList:true,subtree:true});const b=document.createElement('button');b.id='backToTop';b.type='button';b.textContent='↑';b.setAttribute('aria-label','Remonter en haut de la page');b.hidden=true;document.body.append(b);window.addEventListener('scroll',()=>{b.hidden=scrollY<400},{passive:true});b.onclick=()=>window.scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});})();
+\ No newline at end of file
